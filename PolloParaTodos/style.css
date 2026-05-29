@@ -39,3 +39,206 @@
   );
   border-color: rgba(234, 179, 8, 0.3);
 }
+/* Color para la nueva tarjeta de Contactables (Cuarta tarjeta) */
+.stat-card:nth-child(4) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(234, 179, 8, 0.2),
+    rgba(234, 179, 8, 0.05)
+  );
+  border-color: rgba(234, 179, 8, 0.3);
+}
+
+/* Gráfica de Correos: Gradiente Dorado a Rojo Fuego */
+#email-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #eab308 0%, #ef4444 100%) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Gráfica de Cumpleaños: Gradiente Fresa a Naranja */
+#birthdays-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f43f5e 0%, #f97316 100%) !important;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4) !important;
+}
+
+/* Gráfica de Códigos Postales: Gradiente Mostaza a Rojo Fuego */
+#cp-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #eab308 0%, #ef4444 100%) !important;
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4) !important;
+}
+/* Gráfica de Promociones: Gradiente Escarlata a Naranja Intenso */
+#promo-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%) !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+}
+/* Gráfica de Progreso del Álbum: Gradiente Verde Neón a Cian */
+#album-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+}
+/* Color para la nueva tarjeta de Promociones (Quinta tarjeta) */
+.stat-card:nth-child(5) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.2),
+    rgba(220, 38, 38, 0.05)
+  );
+  border-color: rgba(220, 38, 38, 0.3);
+}
+/* =========================================
+   TABLA DE LÍDERES (Liquid Glass)
+   ========================================= */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+.glass-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #ffffff; /* <-- ¡Cambiado a blanco para que resalte! */
+}
+
+.glass-table th {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  padding: 12px 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid rgba(16, 185, 129, 0.2);
+}
+
+.glass-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* <-- Cambiado a una línea blanca sutil */
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.glass-table tr:hover td {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.badge-stamps {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pct-text {
+  font-weight: bold;
+  color: #ef4444; /* Rojo para alertar del porcentaje faltante */
+  min-width: 45px;
+}
+
+.progress-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  min-width: 2px; /* <-- ESTA ES LA SOLUCIÓN AL ERROR DEL PDF */
+}
+
+/* =========================================
+   BOTÓN DE EXPORTAR PDF
+   ========================================= */
+.export-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4);
+}
+
+.export-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+/* =========================================
+   FIX DEFINITIVO PARA PDF (SOLO GRÁFICAS)
+   ========================================= */
+.pdf-mode main {
+  background: #1e293b !important;
+  padding: 20px !important;
+  height: auto !important; /* Deja que la caja crezca todo lo necesario */
+}
+
+/* MATAR ANIMACIONES Y SCROLLS QUE VUELVEN INVISIBLE AL PDF */
+.pdf-mode * {
+  overflow: visible !important;
+  max-height: none !important;
+  animation: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Colores sólidos sin efectos de cristal */
+.pdf-mode .stat-card,
+.pdf-mode .chart-container,
+.pdf-mode .glass-table th,
+.pdf-mode .glass-table td {
+  background: #334155 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+/* Evitar que se corten a la mitad en el salto de página */
+.pdf-mode .chart-container,
+.pdf-mode .stats-container,
+.pdf-mode .stat-card {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* Forzar que las tarjetas superiores quepan bien */
+.pdf-mode .stats-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 15px !important;
+}
+
+.pdf-mode .stat-card {
+  flex: 1 1 180px !important;
+  padding: 15px !important;
+}
+
+/* Corrección de la barra de porcentaje en cero */
+.progress-bar-fill {
+  min-width: 2px !important;
+}

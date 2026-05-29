@@ -50,9 +50,10 @@
       </header>
 
       <main>
+        <!-- 1. TARJETAS DE MÉTRICAS -->
         <div class="stats-container">
           <div class="stat-card today">
-            <div class="stat-icon">👨</div>
+            <div class="stat-icon"><span class="emoji-fix">👨</span></div>
             <div class="stat-content">
               <h2>Hombres Registrados</h2>
               <p class="stat-number">
@@ -64,7 +65,7 @@
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon">👩</div>
+            <div class="stat-icon"><span class="emoji-fix">👩</span></div>
             <div class="stat-content">
               <h2>Mujeres Registradas</h2>
               <p class="stat-number">
@@ -76,17 +77,39 @@
           </div>
 
           <div class="stat-card hotels">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon"><span class="emoji-fix">👥</span></div>
             <div class="stat-content">
               <h2>Total de Usuarios</h2>
               <p class="stat-number" id="total-users">-</p>
               <p class="stat-label">con datos disponibles</p>
             </div>
           </div>
+
+          <!-- LA TARJETA QUE FALTABA -->
+          <div class="stat-card total">
+            <div class="stat-icon"><span class="emoji-fix">📱</span></div>
+            <div class="stat-content">
+              <h2>Contactables</h2>
+              <p class="stat-number" id="phone-count">-</p>
+              <p class="stat-label">teléfono / WhatsApp</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon"><span class="emoji-fix">🎟️</span></div>
+            <div class="stat-content">
+              <h2>Promociones Emitidas</h2>
+              <p class="stat-number" id="promo-count">-</p>
+              <p class="stat-label">cupones en el sistema</p>
+            </div>
+          </div>
         </div>
 
+        <!-- 2. GRÁFICAS DEMOGRÁFICAS -->
         <div class="chart-container">
-          <h3>📍 Top 10 Direcciones Más Comunes</h3>
+          <h3>
+            <span class="emoji-fix">📍</span> Top 10 Direcciones Más Comunes
+          </h3>
           <p class="chart-description">
             Ubicaciones con mayor cantidad de usuarios registrados
           </p>
@@ -96,18 +119,70 @@
             id="address-chart"
             style="display: none"
           ></div>
-          <div class="chart-legend">
-            <small>📍 Las direcciones más frecuentes en los registros</small>
-          </div>
         </div>
 
         <div class="chart-container">
-          <h3>🎂 Promedio de Edades</h3>
+          <h3><span class="emoji-fix">🎂</span> Promedio de Edades</h3>
           <p class="chart-description">Edad promedio por género y total</p>
           <div class="loading" id="loading-age">Cargando datos...</div>
           <div class="chart" id="age-chart" style="display: none"></div>
-          <div class="chart-legend">
-            <small>🎂 Análisis de edades promedio de los usuarios</small>
+        </div>
+
+        <div class="chart-container">
+          <h3><span class="emoji-fix">📧</span> Top Dominios de Correo</h3>
+          <p class="chart-description">
+            Principales proveedores de email (útil para campañas)
+          </p>
+          <div class="loading" id="loading-email">Cargando datos...</div>
+          <div class="chart" id="email-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3><span class="emoji-fix">🎁</span> Cumpleaños por Mes</h3>
+          <p class="chart-description">
+            Distribución de cumpleaños para campañas promocionales
+          </p>
+          <div class="loading" id="loading-birthdays">Cargando datos...</div>
+          <div class="chart" id="birthdays-chart" style="display: none"></div>
+        </div>
+
+        <!-- 3. GRÁFICAS DE GAMIFICACIÓN / LEALTAD -->
+        <div class="chart-container">
+          <h3><span class="emoji-fix">🏷️</span> Estado de Promociones</h3>
+          <p class="chart-description">
+            Estatus actual de los cupones (Pendientes, Canjeados, etc.)
+          </p>
+          <div class="loading" id="loading-promo">
+            Cargando datos de promociones...
+          </div>
+          <div class="chart" id="promo-chart" style="display: none"></div>
+        </div>
+
+        <!-- NUEVA TABLA: Top 15 Progreso del Álbum -->
+        <div class="chart-container">
+          <h3><span class="emoji-fix">🏆</span> Top 15: Líderes del Álbum</h3>
+          <p class="chart-description">
+            Usuarios con más estampas y porcentaje restante para completarlo
+          </p>
+          <div class="loading" id="loading-album">Cargando progreso...</div>
+
+          <div
+            class="table-responsive"
+            id="album-table-container"
+            style="display: none"
+          >
+            <table class="glass-table" id="album-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Estampas</th>
+                  <th>Falta para 100%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Los datos se inyectarán aquí dinámicamente -->
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -119,11 +194,18 @@
 
       <footer>
         <p>Última actualización: <span id="last-update"></span></p>
-        <button onclick="refreshData()" class="refresh-btn">
-          🔄 Actualizar
-        </button>
+        <div style="display: flex; gap: 10px">
+          <button onclick="refreshData()" class="refresh-btn">
+            🔄 Actualizar
+          </button>
+          <button onclick="exportToPDF()" class="export-btn" id="pdf-btn">
+            📄 Exportar PDF
+          </button>
+        </div>
       </footer>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="app.js"></script>

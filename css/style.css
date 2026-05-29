@@ -269,6 +269,10 @@ header h1 {
 /* =========================================
    6. GRÁFICAS (Barras fluidas y radiantes)
    ========================================= */
+/* Agrega margen inferior a todos los contenedores de gráficas */
+.chart-container {
+  margin-bottom: 30px;
+}
 .chart-container h3 {
   font-size: 1.3rem;
   margin-bottom: 5px;

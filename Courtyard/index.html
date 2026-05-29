@@ -4,19 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Análisis de Usuarios - Courtyard</title>
+
+    <link rel="stylesheet" href="/css/style.css" />
+
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <!--div id="navbar-placeholder"></!--div>
-    <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading header:', error));
-    </script>-->
     <div id="navbar-placeholder"></div>
     <script>
       fetch("/header.html")
@@ -24,7 +18,7 @@
         .then((data) => {
           document.getElementById("navbar-placeholder").innerHTML = data;
 
-          // AUTOMATIZACIÓN DEL ESTADO ACTIVO
+          // Automatización del estado activo
           const currentPath = window.location.pathname.toLowerCase();
           const navLinks = document.querySelectorAll(
             ".nav-link, .nav-home-btn",
@@ -32,8 +26,6 @@
 
           navLinks.forEach((link) => {
             const href = link.getAttribute("href").toLowerCase();
-
-            // Verifica si la URL actual coincide o termina con el href del enlace
             if (
               currentPath === href ||
               (currentPath === "/" && href === "/index.html") ||
@@ -49,8 +41,10 @@
     </script>
     <div class="container">
       <header>
-        <h1>📊 Análisis de Usuarios - Courtyard</h1>
-        <p class="subtitle"></p>
+        <h1>
+          <span class="emoji-fix">📊</span> Análisis de Usuarios - Courtyard
+        </h1>
+        <p class="subtitle">Reporte de Afiliaciones y Demografía</p>
       </header>
 
       <main>
@@ -99,9 +93,7 @@
             class="chart hotels-chart"
             id="address-chart"
             style="display: none"
-          >
-            <!-- Los datos se cargarán aquí dinámicamente -->
-          </div>
+          ></div>
           <div class="chart-legend">
             <small>📍 Las direcciones más frecuentes en los registros</small>
           </div>
@@ -111,9 +103,7 @@
           <h3>🎂 Promedio de Edades</h3>
           <p class="chart-description">Edad promedio por género y total</p>
           <div class="loading" id="loading-age">Cargando datos...</div>
-          <div class="chart" id="age-chart" style="display: none">
-            <!-- Los datos se cargarán aquí dinámicamente -->
-          </div>
+          <div class="chart" id="age-chart" style="display: none"></div>
           <div class="chart-legend">
             <small>🎂 Análisis de edades promedio de los usuarios</small>
           </div>
@@ -133,7 +123,6 @@
       </footer>
     </div>
 
-    <!-- Firebase -->
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="app.js"></script>
   </body>

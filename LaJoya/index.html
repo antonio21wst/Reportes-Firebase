@@ -4,19 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Análisis de Usuarios - LaJoya</title>
+
+    <!-- 1. CSS GLOBAL (Fondo animado, NavBar, Liquid Glass base) -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <!-- 2. CSS LOCAL (Colores específicos de La Joya) -->
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <!--div id="navbar-placeholder"></div>
-    <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading header:', error));
-    </script>-->
     <div id="navbar-placeholder"></div>
     <script>
       fetch("/header.html")
@@ -49,8 +45,8 @@
     </script>
     <div class="container">
       <header>
-        <h1>📊 Análisis de Usuarios - LaJoya</h1>
-        <p class="subtitle"></p>
+        <h1><span class="emoji-fix">📊</span> Análisis de Usuarios - LaJoya</h1>
+        <p class="subtitle">Reporte Demográfico y Ubicaciones</p>
       </header>
 
       <main>

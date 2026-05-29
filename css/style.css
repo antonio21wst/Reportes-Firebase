@@ -1,8 +1,8 @@
 /* =========================================
-   GLOBAL.CSS - Estilos compartidos (Raíz)
+   LIQUID GLASS DASHBOARD (APPLE STYLE)
    ========================================= */
 
-/* Reset y estilos base */
+/* 1. Tipografía y Reset */
 * {
   margin: 0;
   padding: 0;
@@ -10,11 +10,31 @@
 }
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #585e68;
-  color: #333;
+  /* Tipografía nativa de Apple para máxima legibilidad */
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* Fondo animado estilo Aurora / macOS */
+  background: linear-gradient(45deg, #0f172a, #3b2c5e, #1e3a8a, #0f172a);
+  background-size: 400% 400%;
+  animation: auroraBG 20s ease infinite;
+  color: #ffffff;
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden;
+}
+
+@keyframes auroraBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .container {
@@ -23,36 +43,46 @@ body {
   padding: 20px;
 }
 
-/* Header de las páginas */
+/* =========================================
+   2. TEXTOS Y CABECERAS
+   ========================================= */
 header {
   text-align: center;
   margin-bottom: 40px;
-  color: white;
+  animation: fadeSlideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
 }
-
+/* Clase para evitar que los emojis se vuelvan transparentes con los gradientes */
+.emoji-fix {
+  -webkit-text-fill-color: initial;
+}
 .subtitle {
   font-size: 1.2rem;
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
 }
 
-/* Navbar Styles (Menú Global) */
+/* =========================================
+   3. NAVBAR (Ultra-thin Glass)
+   ========================================= */
 .navbar {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 10px 0;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
 }
 
 .navbar-area {
@@ -65,99 +95,296 @@ header h1 {
   align-items: center;
 }
 
-.nav-left {
+.nav-links {
   display: flex;
-  align-items: center;
+  gap: 8px;
+  list-style: none;
 }
 
+.nav-link,
 .nav-home-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   text-decoration: none;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  font-size: 0.95rem;
   padding: 8px 16px;
-  border-radius: 50px;
-  transition: all 0.3s ease;
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.nav-link:hover,
+.nav-home-btn:hover {
+  color: #fff;
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Botón Activo Estilo Píldora de iOS */
+.nav-link.active,
+.nav-home-btn.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* =========================================
+   4. TARJETAS (Liquid Glass)
+   ========================================= */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.stat-card,
+.chart-container {
+  /* Efecto Vidrio Líquido */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 25px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.nav-home-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.nav-links {
+/* Iconos tipo App de iOS */
+.stat-icon {
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
   display: flex;
-  gap: 15px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
   align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.nav-link {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 500;
-  font-size: 0.95rem;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+/* Textos dentro de las tarjetas */
+.stat-content h2 {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
 }
 
-.nav-link:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-}
-
-.nav-link.active {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.25);
+.stat-number {
+  font-size: 2.8rem;
   font-weight: 700;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-bottom: 2px solid #d69f4b;
-  border-radius: 8px 8px 0 0;
+  letter-spacing: -1px;
+  margin: 5px 0;
 }
 
-.nav-home-btn.active {
-  background: linear-gradient(135deg, #d69f4b, #c28934);
-  border-color: #c28934;
-  box-shadow: 0 4px 15px rgba(214, 159, 75, 0.4);
+.stat-percentage {
+  font-size: 0.9rem;
+  color: #4ade80;
+  font-weight: 600;
+  margin-left: 8px;
+}
+.stat-date,
+.stat-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
 }
 
-/* Indicador de estado y Footer (Son iguales en todos) */
-.status-indicator {
+/* =========================================
+   5. BUSCADOR (Inputs elegantes)
+   ========================================= */
+.hotel-search {
   display: flex;
+  gap: 10px;
+  margin: 15px 0 10px 0;
+  width: 100%; /* Forzamos a que no se salga de la tarjeta */
+}
+
+.hotel-search input {
+  flex: 1;
+  min-width: 0; /* Permite que el input se encoja sin desbordar */
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.hotel-search input:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.4);
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.hotel-search input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.hotel-search button {
+  padding: 0 15px; /* Reducimos ligeramente el espacio lateral */
+  flex-shrink: 0; /* Evita que el botón se aplaste */
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotel-search button:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
+/* =========================================
+   6. GRÁFICAS (Barras fluidas y radiantes)
+   ========================================= */
+.chart-container h3 {
+  font-size: 1.3rem;
+  margin-bottom: 5px;
+}
+
+.chart-description {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: auto;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 10px 5px;
+  gap: 16px;
+}
+
+.chart-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+}
+
+.bar-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  min-width: 60px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.chart-bar .bar {
+  /* Gradiente vibrante estilo iOS */
+  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+  border-radius: 20px;
+  height: 12px; /* Barras más delgadas y elegantes */
+  min-width: 5px;
+  box-shadow: 0 4px 10px rgba(129, 140, 248, 0.4);
+  position: relative;
+}
+
+/* Animación de llenado de la barra */
+@keyframes fillBar {
+  from {
+    width: 0%;
+    opacity: 0;
+  }
+}
+.chart-bar .bar {
+  animation: fillBar 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Gradiente alternativo para hoteles */
+.hotels-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f43f5e 0%, #fb923c 100%);
+  box-shadow: 0 4px 10px rgba(244, 63, 94, 0.4);
+}
+
+.bar-count {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Scrollbar invisible e intuitiva */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* =========================================
+   7. FOOTER Y ESTADO
+   ========================================= */
+.status-indicator {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 10px 15px;
+  margin-top: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
-  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .status-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: #ffc107;
+  background: #fbbf24;
   animation: pulse 2s infinite;
 }
-
 .status-dot.connected {
-  background: #4caf50;
+  background: #34d399;
   animation: none;
 }
 .status-dot.error {
-  background: #f44336;
+  background: #ef4444;
   animation: pulse 1s infinite;
 }
 
@@ -174,113 +401,174 @@ header h1 {
 }
 
 footer {
-  text-align: center;
-  color: white;
-  opacity: 0.9;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .refresh-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 10px 20px;
-  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 24px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .refresh-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
-  .navbar-area {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  .container {
-    padding: 15px;
-  }
-  header h1 {
-    font-size: 2rem;
-  }
-  footer {
-    flex-direction: column;
-  }
-}
-
-/* Animaciones de entrada genéricas */
+/* =========================================
+   8. ANIMACIONES DE CARGA ESCALONADA
+   ========================================= */
 .stat-card,
 .chart-container {
   opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.6s ease forwards;
+  animation: fadeSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
-@keyframes fadeInUp {
-  to {
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
+/* Retraso en cascada para que los elementos aparezcan uno tras otro */
+.stat-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.stat-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.stat-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.stat-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.stat-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.chart-container:nth-of-type(1) {
+  animation-delay: 0.4s;
+}
+.chart-container:nth-of-type(2) {
+  animation-delay: 0.6s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-area {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  footer {
+    flex-direction: column;
+    gap: 15px;
+  }
+  header h1 {
+    font-size: 2rem;
+  }
+}
+
 /* =========================================
-   ESTILOS PARA LAS TARJETAS / MENÚ HOME
+   ESTILOS ESPECÍFICOS PARA EL MENÚ PRINCIPAL (HOME)
    ========================================= */
 
-.stats-container {
+/* Grid 100% Responsivo: Se adapta automáticamente al tamaño de la pantalla */
+.home-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 20px 0;
 }
 
-.stat-card {
-  background: white;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  text-decoration: none; /* Por si el Home usa etiquetas <a> */
-  color: #333;
+/* Diseño de las tarjetas como "Botones de App" gigantes */
+.home-card {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  font-weight: bold;
+  padding: 40px 20px;
+  gap: 15px;
+  /* Efecto Glass más pronunciado para los botones principales */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+.home-card:hover {
+  /* Al pasar el mouse, el botón se ilumina y flota */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-8px) scale(1.03);
 }
 
-/* Colores de los bordes laterales (idénticos a tu versión anterior) */
-.stat-card.today {
-  border-left: 5px solid #4caf50; /* Verde */
+/* Iconos gigantes para el Home */
+.home-card .stat-icon {
+  width: 80px;
+  height: 80px;
+  font-size: 3rem;
+  margin-bottom: 0;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.stat-card.yesterday {
-  border-left: 5px solid #2196f3; /* Azul */
+.home-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
-.stat-card.hotels {
-  border-left: 5px solid #ff9800; /* Naranja/Amarillo */
+/* Textos del Home */
+.home-card .stat-content h2 {
+  font-size: 1.3rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
-.stat-card.total {
-  border-left: 5px solid #ff9800; /* Naranja */
+.home-card .stat-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
 }
-
-/* Si tu Home tiene otras clases específicas para Courtyard/Chapultepec, 
-   heredarán la forma blanca con sombra automáticamente gracias a .stat-card */

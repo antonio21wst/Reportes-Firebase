@@ -10,133 +10,66 @@
   <body>
     <div class="container">
       <header>
-        <h1>📊 Reportes</h1>
+        <h1>Reportes</h1>
         <p class="subtitle"></p>
       </header>
 
       <main>
-        <div
-          class="stats-container"
-          style="
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 40px;
-          "
-        >
-          <a
-            class="stat-card today"
-            href="GourmetCard/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+        <!-- Eliminamos el style="" en línea para que el CSS controle la responsividad -->
+        <div class="stats-container home-grid">
+          <a class="stat-card home-card" href="GourmetCard/index.html">
+            <div class="stat-icon">🍽️</div>
+            <div class="stat-content">
               <h2>Gourmet Card</h2>
+              <p class="stat-label">Plan de Lealtad Multimarca</p>
             </div>
           </a>
 
-          <a
-            class="stat-card yesterday"
-            href="LaJoya/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+          <a class="stat-card home-card" href="LaJoya/index.html">
+            <div class="stat-icon">🏨</div>
+            <div class="stat-content">
               <h2>La Joya</h2>
+              <p class="stat-label">Reporte de Usuarios Registrados</p>
             </div>
           </a>
 
-          <a
-            class="stat-card hotels"
-            href="Galindo/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+          <a class="stat-card home-card" href="Galindo/index.html">
+            <div class="stat-icon">🌲</div>
+            <div class="stat-content">
               <h2>Galindo</h2>
+              <p class="stat-label">Métricas de Restaurante y SPA</p>
             </div>
           </a>
 
-          <a
-            class="stat-card total"
-            href="Courtyard/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+          <a class="stat-card home-card" href="Courtyard/index.html">
+            <div class="stat-icon">🏢</div>
+            <div class="stat-content">
               <h2>Courtyard</h2>
+              <p class="stat-label">Reporte de Afiliaciones</p>
             </div>
           </a>
 
-          <a
-            class="stat-card total"
-            href="Chapultepec/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+          <a class="stat-card home-card" href="Chapultepec/index.html">
+            <div class="stat-icon">🌆</div>
+            <div class="stat-content">
               <h2>Chapultepec</h2>
+              <p class="stat-label">Métricas y Direcciones Top</p>
             </div>
           </a>
-          <a
-            class="stat-card total"
-            href="PolloParaTodos/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+
+          <a class="stat-card home-card" href="PolloParaTodos/index.html">
+            <div class="stat-icon">🍗</div>
+            <div class="stat-content">
               <h2>Pollo para Todos</h2>
+              <p class="stat-label">Interacciones y Álbum Digital</p>
             </div>
-                      <a
-            class="stat-card total"
-            href="Tijon/index.html"
-            style="
-              text-decoration: none;
-              color: inherit;
-              height: 100px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <div class="stat-content" style="text-align: center">
+          </a>
+
+          <a class="stat-card home-card" href="Tijon/index.html">
+            <div class="stat-icon">🧪</div>
+            <div class="stat-content">
               <h2>Tijon</h2>
+              <p class="stat-label">Usuarios del Plan de Lealtad</p>
             </div>
           </a>
         </div>

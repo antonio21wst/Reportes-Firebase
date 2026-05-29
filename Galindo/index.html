@@ -4,19 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Análisis de Usuarios - Galindo</title>
+
+    <!-- 1. CSS GLOBAL (Liquid Glass, animaciones, barra de navegación) -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <!-- 2. CSS LOCAL (Colores específicos de Galindo) -->
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <!--div id="navbar-placeholder"></!--div>
-    <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('navbar-placeholder').innerHTML = data;
-            })
-            .catch(error => console.error('Error loading header:', error));
-    </script>-->
     <div id="navbar-placeholder"></div>
     <script>
       fetch("/header.html")
@@ -32,8 +28,6 @@
 
           navLinks.forEach((link) => {
             const href = link.getAttribute("href").toLowerCase();
-
-            // Verifica si la URL actual coincide o termina con el href del enlace
             if (
               currentPath === href ||
               (currentPath === "/" && href === "/index.html") ||
@@ -49,11 +43,14 @@
     </script>
     <div class="container">
       <header>
-        <h1>📊 Análisis de Usuarios - Galindo</h1>
-        <p class="subtitle"></p>
+        <h1>
+          <span class="emoji-fix">📊</span> Análisis de Usuarios - Galindo
+        </h1>
+        <p class="subtitle">Métricas de Demografía y Servicios</p>
       </header>
 
       <main>
+        <!-- PRIMER BLOQUE: Demografía -->
         <div class="stats-container">
           <div class="stat-card today">
             <div class="stat-icon">👨</div>
@@ -89,6 +86,7 @@
           </div>
         </div>
 
+        <!-- SEGUNDO BLOQUE: Servicios -->
         <div class="stats-container" style="margin-top: 40px">
           <div class="stat-card today">
             <div class="stat-icon">🍽️</div>
@@ -119,9 +117,7 @@
             class="chart hotels-chart"
             id="address-chart"
             style="display: none"
-          >
-            <!-- Los datos se cargarán aquí dinámicamente -->
-          </div>
+          ></div>
           <div class="chart-legend">
             <small>📍 Las direcciones más frecuentes en los registros</small>
           </div>
@@ -131,9 +127,7 @@
           <h3>🎂 Promedio de Edades</h3>
           <p class="chart-description">Edad promedio por género y total</p>
           <div class="loading" id="loading-age">Cargando datos...</div>
-          <div class="chart" id="age-chart" style="display: none">
-            <!-- Los datos se cargarán aquí dinámicamente -->
-          </div>
+          <div class="chart" id="age-chart" style="display: none"></div>
           <div class="chart-legend">
             <small>🎂 Análisis de edades promedio de los usuarios</small>
           </div>

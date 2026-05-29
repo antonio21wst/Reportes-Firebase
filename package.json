@@ -1,0 +1,28 @@
+{
+  "name": "plan-lealtad-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard para mostrar estadísticas del plan de lealtad",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "firebase",
+    "dashboard",
+    "analytics",
+    "loyalty-program"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "firebase-admin": "^11.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "type": "commonjs"
+}

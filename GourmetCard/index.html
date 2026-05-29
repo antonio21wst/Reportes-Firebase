@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan de Lealtad - Gourmet Card</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!--div id="navbar-placeholder"></!--div>
+    <script>
+        fetch('/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-placeholder').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading header:', error));
+    </!--script-->
+    <div id="navbar-placeholder"></div>
+    <script>
+      fetch("/header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+
+          // AUTOMATIZACIÓN DEL ESTADO ACTIVO
+          const currentPath = window.location.pathname.toLowerCase();
+          const navLinks = document.querySelectorAll(
+            ".nav-link, .nav-home-btn",
+          );
+
+          navLinks.forEach((link) => {
+            const href = link.getAttribute("href").toLowerCase();
+
+            // Verifica si la URL actual coincide o termina con el href del enlace
+            if (
+              currentPath === href ||
+              (currentPath === "/" && href === "/index.html") ||
+              (currentPath.includes(href) &&
+                href !== "/index.html" &&
+                href !== "/gc.html")
+            ) {
+              link.classList.add("active");
+            }
+          });
+        })
+        .catch((error) => console.error("Error loading header:", error));
+    </script>
+    <div class="container">
+      <header>
+        <h1>📊 Plan de Lealtad - Gourmet Card</h1>
+        <p class="subtitle">Conteo diario de registros</p>
+      </header>
+
+      <main>
+        <div class="stats-container">
+          <div class="stat-card today">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+              <h2>Registros Hoy</h2>
+              <p class="stat-number" id="today-count">-</p>
+              <p class="stat-date" id="today-date"></p>
+            </div>
+          </div>
+
+          <div class="stat-card yesterday">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <h2>Registros Ayer</h2>
+              <p class="stat-number" id="yesterday-count">-</p>
+              <p class="stat-date" id="yesterday-date"></p>
+            </div>
+          </div>
+
+          <div class="stat-card hotels">
+            <div class="stat-icon">🏨</div>
+            <div class="stat-content">
+              <h2>Buscar por Hotel</h2>
+              <div class="hotel-search">
+                <input
+                  type="text"
+                  id="hotel-search-input"
+                  placeholder="Ingresa ID del hotel"
+                  maxlength="20"
+                />
+                <button id="hotel-search-btn" onclick="searchHotel()">
+                  🔍
+                </button>
+              </div>
+              <p class="stat-number" id="hotel-result">-</p>
+              <p class="stat-label" id="hotel-label">usuarios registrados</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+              <h2>Total Usuarios</h2>
+              <p class="stat-number" id="total-count">-</p>
+              <p class="stat-label">desde el inicio del programa</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h3>📅 Registros de los últimos 7 días</h3>
+          <p class="chart-description">
+            Cada barra muestra cuántos usuarios nuevos se registraron ese día
+          </p>
+          <div class="loading" id="loading">Cargando datos...</div>
+          <div class="chart" id="weekly-chart" style="display: none">
+            <!-- Los datos se cargarán aquí dinámicamente -->
+          </div>
+          <div class="chart-legend">
+            <small
+              >💡 Pasa el cursor sobre las barras para ver los detalles de cada
+              día</small
+            >
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h3>🏨 Top 10 Hoteles Más Populares</h3>
+          <p class="chart-description">
+            Hoteles con mayor cantidad de usuarios registrados
+          </p>
+          <div class="loading" id="loading-hotels">
+            Cargando datos de hoteles...
+          </div>
+          <div
+            class="chart hotels-chart"
+            id="hotels-chart"
+            style="display: none"
+          >
+            <!-- Los datos se cargarán aquí dinámicamente -->
+          </div>
+          <div class="chart-legend">
+            <small
+              >🏨 Los hoteles con más usuarios registrados en el programa de
+              lealtad</small
+            >
+          </div>
+        </div>
+
+        <div class="status-indicator">
+          <span class="status-dot" id="connection-status"></span>
+          <span id="status-text">Conectando...</span>
+        </div>
+      </main>
+
+      <footer>
+        <p>Última actualización: <span id="last-update"></span></p>
+        <button onclick="refreshData()" class="refresh-btn">
+          🔄 Actualizar
+        </button>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

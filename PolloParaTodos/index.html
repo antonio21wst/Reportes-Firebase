@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Análisis de Usuarios - Pollo para Todos</title>
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="/css/style.css" />
 
     <link rel="stylesheet" href="style.css" />
@@ -43,72 +46,86 @@
     <div class="container">
       <header>
         <h1>
-          <span class="emoji-fix">📊</span> Análisis de Usuarios - Pollo para
-          Todos
+          <i class="fa-solid fa-chart-pie"></i> Análisis de Usuarios - Pollo
+          para Todos
         </h1>
         <p class="subtitle">Métricas del Plan de Lealtad y Álbum Digital</p>
       </header>
 
       <main>
-        <!-- 1. TARJETAS DE MÉTRICAS -->
         <div class="stats-container">
           <div class="stat-card today">
-            <div class="stat-icon"><span class="emoji-fix">👨</span></div>
+            <div class="stat-icon"><i class="fa-solid fa-mars"></i></div>
             <div class="stat-content">
-              <h2>Hombres Registrados</h2>
+              <h2>Hombres</h2>
               <p class="stat-number">
                 <span id="male-count">-</span>
                 <span class="stat-percentage" id="male-percentage">-</span>
               </p>
-              <p class="stat-label">usuarios masculinos</p>
+              <p class="stat-label">registrados</p>
             </div>
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon"><span class="emoji-fix">👩</span></div>
+            <div class="stat-icon"><i class="fa-solid fa-venus"></i></div>
             <div class="stat-content">
-              <h2>Mujeres Registradas</h2>
+              <h2>Mujeres</h2>
               <p class="stat-number">
                 <span id="female-count">-</span>
                 <span class="stat-percentage" id="female-percentage">-</span>
               </p>
-              <p class="stat-label">usuarios femeninos</p>
+              <p class="stat-label">registradas</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-genderless"></i></div>
+            <div class="stat-content">
+              <h2>Otros</h2>
+              <p class="stat-number">
+                <span id="other-count">-</span>
+                <span class="stat-percentage" id="other-percentage">-</span>
+              </p>
+              <p class="stat-label">no especificado / otros</p>
             </div>
           </div>
 
           <div class="stat-card hotels">
-            <div class="stat-icon"><span class="emoji-fix">👥</span></div>
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
             <div class="stat-content">
-              <h2>Total de Usuarios</h2>
+              <h2>Usuarios Registrados</h2>
               <p class="stat-number" id="total-users">-</p>
-              <p class="stat-label">con datos disponibles</p>
-            </div>
-          </div>
-
-          <!-- LA TARJETA QUE FALTABA -->
-          <div class="stat-card total">
-            <div class="stat-icon"><span class="emoji-fix">📱</span></div>
-            <div class="stat-content">
-              <h2>Contactables</h2>
-              <p class="stat-number" id="phone-count">-</p>
-              <p class="stat-label">teléfono / WhatsApp</p>
+              <p class="stat-label">perfiles en BD</p>
             </div>
           </div>
 
           <div class="stat-card total">
-            <div class="stat-icon"><span class="emoji-fix">🎟️</span></div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-ticket-simple"></i>
+            </div>
             <div class="stat-content">
-              <h2>Promociones Emitidas</h2>
+              <h2>Promos Emitidas</h2>
               <p class="stat-number" id="promo-count">-</p>
-              <p class="stat-label">cupones en el sistema</p>
+              <p class="stat-label">cupones en sistema</p>
             </div>
           </div>
         </div>
 
-        <!-- 2. GRÁFICAS DEMOGRÁFICAS -->
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-store"></i> Sucursales Aliadas</h3>
+          <p class="chart-description">
+            Distribución de puntos de venta físicos
+          </p>
+          <div class="loading" id="loading-company">
+            Cargando datos de sucursales...
+          </div>
+          <div class="chart" id="company-chart" style="display: none"></div>
+        </div>
+
         <div class="chart-container">
           <h3>
-            <span class="emoji-fix">📍</span> Top 10 Direcciones Más Comunes
+            <i class="fa-solid fa-map-location-dot"></i> Top 10 Direcciones Más
+            Comunes
           </h3>
           <p class="chart-description">
             Ubicaciones con mayor cantidad de usuarios registrados
@@ -122,14 +139,17 @@
         </div>
 
         <div class="chart-container">
-          <h3><span class="emoji-fix">🎂</span> Promedio de Edades</h3>
+          <h3><i class="fa-solid fa-cake-candles"></i> Promedio de Edades</h3>
           <p class="chart-description">Edad promedio por género y total</p>
           <div class="loading" id="loading-age">Cargando datos...</div>
           <div class="chart" id="age-chart" style="display: none"></div>
         </div>
 
         <div class="chart-container">
-          <h3><span class="emoji-fix">📧</span> Top Dominios de Correo</h3>
+          <h3>
+            <i class="fa-solid fa-envelope-open-text"></i> Top Dominios de
+            Correo
+          </h3>
           <p class="chart-description">
             Principales proveedores de email (útil para campañas)
           </p>
@@ -138,7 +158,7 @@
         </div>
 
         <div class="chart-container">
-          <h3><span class="emoji-fix">🎁</span> Cumpleaños por Mes</h3>
+          <h3><i class="fa-solid fa-gift"></i> Cumpleaños por Mes</h3>
           <p class="chart-description">
             Distribución de cumpleaños para campañas promocionales
           </p>
@@ -146,9 +166,8 @@
           <div class="chart" id="birthdays-chart" style="display: none"></div>
         </div>
 
-        <!-- 3. GRÁFICAS DE GAMIFICACIÓN / LEALTAD -->
         <div class="chart-container">
-          <h3><span class="emoji-fix">🏷️</span> Estado de Promociones</h3>
+          <h3><i class="fa-solid fa-tags"></i> Estado de Promociones</h3>
           <p class="chart-description">
             Estatus actual de los cupones (Pendientes, Canjeados, etc.)
           </p>
@@ -158,14 +177,12 @@
           <div class="chart" id="promo-chart" style="display: none"></div>
         </div>
 
-        <!-- NUEVA TABLA: Top 15 Progreso del Álbum -->
         <div class="chart-container">
-          <h3><span class="emoji-fix">🏆</span> Top 15: Líderes del Álbum</h3>
+          <h3><i class="fa-solid fa-trophy"></i> Top 15: Líderes del Álbum</h3>
           <p class="chart-description">
             Usuarios con más estampas y porcentaje restante para completarlo
           </p>
           <div class="loading" id="loading-album">Cargando progreso...</div>
-
           <div
             class="table-responsive"
             id="album-table-container"
@@ -179,9 +196,7 @@
                   <th>Falta para 100%</th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- Los datos se inyectarán aquí dinámicamente -->
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
         </div>
@@ -189,17 +204,17 @@
         <div class="status-indicator">
           <span class="status-dot" id="connection-status"></span>
           <span id="status-text">Conectando a Firestore...</span>
+          <p>Última actualización: <span id="last-update"></span></p>
         </div>
       </main>
 
       <footer>
-        <p>Última actualización: <span id="last-update"></span></p>
         <div style="display: flex; gap: 10px">
           <button onclick="refreshData()" class="refresh-btn">
-            🔄 Actualizar
+            <i class="fa-solid fa-rotate-right"></i> Actualizar
           </button>
-          <button onclick="exportToPDF()" class="export-btn" id="pdf-btn">
-            📄 Exportar PDF
+          <button onclick="window.print()" class="export-btn" id="pdf-btn">
+            <i class="fa-solid fa-file-pdf"></i> Exportar PDF
           </button>
         </div>
       </footer>

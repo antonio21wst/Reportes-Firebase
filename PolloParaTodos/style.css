@@ -14,24 +14,38 @@
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4) !important;
 }
 
-/* Colorear sutilmente los fondos de los íconos de las tarjetas superiores */
+/* =========================================
+   COLORES DE LAS 5 TARJETAS SUPERIORES
+   ========================================= */
 .stat-card:nth-child(1) .stat-icon {
+  /* Hombres - Azul */
   background: linear-gradient(
     135deg,
-    rgba(239, 68, 68, 0.2),
-    rgba(239, 68, 68, 0.05)
+    rgba(59, 130, 246, 0.2),
+    rgba(59, 130, 246, 0.05)
   );
-  border-color: rgba(239, 68, 68, 0.3);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 .stat-card:nth-child(2) .stat-icon {
+  /* Mujeres - Rosa */
   background: linear-gradient(
     135deg,
-    rgba(249, 115, 22, 0.2),
-    rgba(249, 115, 22, 0.05)
+    rgba(236, 72, 153, 0.2),
+    rgba(236, 72, 153, 0.05)
   );
-  border-color: rgba(249, 115, 22, 0.3);
+  border-color: rgba(236, 72, 153, 0.3);
 }
 .stat-card:nth-child(3) .stat-icon {
+  /* Otros - Verde Teal */
+  background: linear-gradient(
+    135deg,
+    rgba(20, 184, 166, 0.2),
+    rgba(20, 184, 166, 0.05)
+  );
+  border-color: rgba(20, 184, 166, 0.3);
+}
+.stat-card:nth-child(4) .stat-icon {
+  /* Total - Amarillo Mostaza */
   background: linear-gradient(
     135deg,
     rgba(234, 179, 8, 0.2),
@@ -39,16 +53,32 @@
   );
   border-color: rgba(234, 179, 8, 0.3);
 }
-/* Color para la nueva tarjeta de Contactables (Cuarta tarjeta) */
-.stat-card:nth-child(4) .stat-icon {
+.stat-card:nth-child(5) .stat-icon {
+  /* Promos - Rojo Escarlata */
   background: linear-gradient(
     135deg,
-    rgba(234, 179, 8, 0.2),
-    rgba(234, 179, 8, 0.05)
+    rgba(220, 38, 38, 0.2),
+    rgba(220, 38, 38, 0.05)
   );
-  border-color: rgba(234, 179, 8, 0.3);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+.stat-card:nth-child(6) .stat-icon {
+  /* Promos - Rojo Escarlata */
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.2),
+    rgba(220, 38, 38, 0.05)
+  );
+  border-color: rgba(220, 38, 38, 0.3);
 }
 
+/* =========================================
+   NUEVA GRÁFICA DE SUCURSALES (Morado Neón)
+   ========================================= */
+#company-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #8b5cf6 0%, #d946ef 100%) !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4) !important;
+}
 /* Gráfica de Correos: Gradiente Dorado a Rojo Fuego */
 #email-chart .chart-bar .bar {
   background: linear-gradient(90deg, #eab308 0%, #ef4444 100%) !important;
@@ -76,15 +106,7 @@
   background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%) !important;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
 }
-/* Color para la nueva tarjeta de Promociones (Quinta tarjeta) */
-.stat-card:nth-child(5) .stat-icon {
-  background: linear-gradient(
-    135deg,
-    rgba(220, 38, 38, 0.2),
-    rgba(220, 38, 38, 0.05)
-  );
-  border-color: rgba(220, 38, 38, 0.3);
-}
+
 /* =========================================
    TABLA DE LÍDERES (Liquid Glass)
    ========================================= */
@@ -187,58 +209,98 @@
   opacity: 0.7;
   cursor: wait;
 }
+
 /* =========================================
-   FIX DEFINITIVO PARA PDF (SOLO GRÁFICAS)
+   SISTEMA NATIVO DE EXPORTACIÓN A PDF
    ========================================= */
-.pdf-mode main {
-  background: #1e293b !important;
-  padding: 20px !important;
-  height: auto !important; /* Deja que la caja crezca todo lo necesario */
+
+@page {
+  margin: 0;
 }
 
-/* MATAR ANIMACIONES Y SCROLLS QUE VUELVEN INVISIBLE AL PDF */
-.pdf-mode * {
-  overflow: visible !important;
-  max-height: none !important;
-  animation: none !important;
-  transform: none !important;
-  transition: none !important;
+@media print {
+  /* 1. Ocultar elementos de navegación y botones */
+  #navbar-placeholder,
+  footer,
+  .refresh-btn,
+  .export-btn,
+  .hotel-search {
+    display: none !important;
+  }
+
+  /* 2. FORZAR al navegador a dibujar fondos, gradientes y colores exactos */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background-color: #585e68 !important;
+    margin: 0;
+    padding: 1.5cm !important;
+  }
+
+  /* 3. FIX DE CORTES: Forzar que las tarjetas y gráficas sean "bloques" irrompibles */
+  .chart-container,
+  .stat-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important; /* CRÍTICO: Evita que el motor se confunda con Flexbox */
+    margin-bottom: 25px !important;
+  }
+
+  /* 4. FIX DE CORTES EN LA TABLA: Reglas estrictas para filas y encabezados */
+  .table-responsive {
+    overflow: visible !important; /* Evita que el scroll interno corte la tabla */
+  }
+  table {
+    page-break-inside: auto !important;
+  }
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
+  thead {
+    display: table-header-group !important; /* Si la tabla es muy larga, repite el título arriba de la nueva hoja */
+  }
+  tbody,
+  tfoot {
+    display: table-row-group !important;
+  }
+
+  /* 5. Quitar sombras que a veces arruinan el renderizado */
+  .stat-card,
+  .chart-container {
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* 6. Mantener las tarjetas de arriba en estructura de cuadrícula */
+  .stats-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .stat-card {
+    flex: 1 1 150px !important;
+  }
 }
 
-/* Colores sólidos sin efectos de cristal */
-.pdf-mode .stat-card,
-.pdf-mode .chart-container,
-.pdf-mode .glass-table th,
-.pdf-mode .glass-table td {
-  background: #334155 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
+/* =========================================
+   ESTILOS PARA LOS NUEVOS ÍCONOS VECTORIALES
+   ========================================= */
+.stat-icon i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-/* Evitar que se corten a la mitad en el salto de página */
-.pdf-mode .chart-container,
-.pdf-mode .stats-container,
-.pdf-mode .stat-card {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
+h1 i,
+h3 i {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.75);
 }
 
-/* Forzar que las tarjetas superiores quepan bien */
-.pdf-mode .stats-container {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 15px !important;
-}
-
-.pdf-mode .stat-card {
-  flex: 1 1 180px !important;
-  padding: 15px !important;
-}
-
-/* Corrección de la barra de porcentaje en cero */
-.progress-bar-fill {
-  min-width: 2px !important;
+.refresh-btn i,
+.export-btn i {
+  margin-right: 5px;
 }

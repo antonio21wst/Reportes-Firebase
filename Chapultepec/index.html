@@ -51,64 +51,129 @@
       </header>
 
       <main>
+        <!-- 1. TARJETAS DE MÉTRICAS -->
         <div class="stats-container">
           <div class="stat-card today">
-            <div class="stat-icon">👨</div>
+            <div class="stat-icon"><i class="fa-solid fa-mars"></i></div>
             <div class="stat-content">
-              <h2>Hombres Registrados</h2>
+              <h2>Hombres</h2>
               <p class="stat-number">
                 <span id="male-count">-</span>
                 <span class="stat-percentage" id="male-percentage">-</span>
               </p>
-              <p class="stat-label">usuarios masculinos</p>
+              <p class="stat-label">registrados</p>
             </div>
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon">👩</div>
+            <div class="stat-icon"><i class="fa-solid fa-venus"></i></div>
             <div class="stat-content">
-              <h2>Mujeres Registradas</h2>
+              <h2>Mujeres</h2>
               <p class="stat-number">
                 <span id="female-count">-</span>
                 <span class="stat-percentage" id="female-percentage">-</span>
               </p>
-              <p class="stat-label">usuarios femeninos</p>
+              <p class="stat-label">registradas</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-genderless"></i></div>
+            <div class="stat-content">
+              <h2>Otros</h2>
+              <p class="stat-number">
+                <span id="other-count">-</span>
+                <span class="stat-percentage" id="other-percentage">-</span>
+              </p>
+              <p class="stat-label">no especificado</p>
             </div>
           </div>
 
           <div class="stat-card hotels">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
             <div class="stat-content">
-              <h2>Total de Usuarios</h2>
+              <h2>Total Usuarios</h2>
               <p class="stat-number" id="total-users">-</p>
-              <p class="stat-label">con datos disponibles</p>
+              <p class="stat-label">perfiles en BD</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon">
+              <i class="fa-solid fa-mobile-screen"></i>
+            </div>
+            <div class="stat-content">
+              <h2>Contactables</h2>
+              <p class="stat-number" id="phone-count">-</p>
+              <p class="stat-label">teléfono / WhatsApp</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon">
+              <i class="fa-solid fa-bell-concierge"></i>
+            </div>
+            <div class="stat-content">
+              <h2>Total de Visitas</h2>
+              <p class="stat-number" id="visitas-count">-</p>
+              <p class="stat-label">registradas históricamente</p>
             </div>
           </div>
         </div>
 
+        <!-- 2. GRÁFICAS DEL NEGOCIO -->
         <div class="chart-container">
-          <h3>📍 Top 10 Direcciones Más Comunes</h3>
+          <h3><i class="fa-solid fa-spa"></i> Servicios Preferidos</h3>
+          <p class="chart-description">
+            Distribución de servicios registrados por los usuarios (ej.
+            Restaurante, Spa)
+          </p>
+          <div class="loading" id="loading-service">Cargando servicios...</div>
+          <div class="chart" id="service-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-map-location-dot"></i> Top 10 Direcciones
+          </h3>
           <p class="chart-description">
             Ubicaciones con mayor cantidad de usuarios registrados
           </p>
           <div class="loading" id="loading-address">Cargando datos...</div>
-          <div
-            class="chart hotels-chart"
-            id="address-chart"
-            style="display: none"
-          ></div>
-          <div class="chart-legend">
-            <small>📍 Las direcciones más frecuentes en los registros</small>
-          </div>
+          <div class="chart" id="address-chart" style="display: none"></div>
         </div>
 
         <div class="chart-container">
-          <h3>🎂 Promedio de Edades</h3>
+          <h3><i class="fa-solid fa-cake-candles"></i> Promedio de Edades</h3>
           <p class="chart-description">Edad promedio por género y total</p>
           <div class="loading" id="loading-age">Cargando datos...</div>
           <div class="chart" id="age-chart" style="display: none"></div>
-          <div class="chart-legend">
-            <small>🎂 Análisis de edades promedio de los usuarios</small>
+        </div>
+
+        <!-- 3. TABLA DE LEALTAD -->
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-crown"></i> Top 15: Clientes Frecuentes</h3>
+          <p class="chart-description">
+            Ranking de usuarios con mayor número de visitas y puntos acumulados
+          </p>
+          <div class="loading" id="loading-clientes">Cargando lealtad...</div>
+          <div
+            class="table-responsive"
+            id="clientes-table-container"
+            style="display: none"
+          >
+            <table class="glass-table" id="clientes-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Total Visitas</th>
+                  <th>Puntos de Lealtad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Los datos se inyectarán aquí -->
+              </tbody>
+            </table>
           </div>
         </div>
 

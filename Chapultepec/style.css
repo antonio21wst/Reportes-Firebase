@@ -41,3 +41,156 @@
   );
   border-color: rgba(14, 165, 233, 0.3);
 }
+/* =========================================
+   COLORES DE LAS 6 TARJETAS SUPERIORES
+   ========================================= */
+.stat-card:nth-child(1) .stat-icon {
+  /* Hombres - Azul */
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.2),
+    rgba(59, 130, 246, 0.05)
+  );
+  border-color: rgba(59, 130, 246, 0.3);
+}
+.stat-card:nth-child(2) .stat-icon {
+  /* Mujeres - Rosa */
+  background: linear-gradient(
+    135deg,
+    rgba(236, 72, 153, 0.2),
+    rgba(236, 72, 153, 0.05)
+  );
+  border-color: rgba(236, 72, 153, 0.3);
+}
+.stat-card:nth-child(3) .stat-icon {
+  /* Otros - Verde Teal */
+  background: linear-gradient(
+    135deg,
+    rgba(20, 184, 166, 0.2),
+    rgba(20, 184, 166, 0.05)
+  );
+  border-color: rgba(20, 184, 166, 0.3);
+}
+.stat-card:nth-child(4) .stat-icon {
+  /* Total - Mostaza */
+  background: linear-gradient(
+    135deg,
+    rgba(234, 179, 8, 0.2),
+    rgba(234, 179, 8, 0.05)
+  );
+  border-color: rgba(234, 179, 8, 0.3);
+}
+.stat-card:nth-child(5) .stat-icon {
+  /* Contactables - Naranja */
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.2),
+    rgba(249, 115, 22, 0.05)
+  );
+  border-color: rgba(249, 115, 22, 0.3);
+}
+.stat-card:nth-child(6) .stat-icon {
+  /* Total Visitas - Esmeralda/Dorado */
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.2),
+    rgba(234, 179, 8, 0.05)
+  );
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* =========================================
+   COLORES DE GRÁFICAS Y COMPONENTES
+   ========================================= */
+/* Gráfica de Servicios: Gradiente Fuego/Dorado */
+#service-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f97316 0%, #eab308 100%) !important;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4) !important;
+}
+/* Gráfica de Direcciones: Gradiente Esmeralda/Cyan */
+#address-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+}
+/* Gráfica de Edades: Violeta/Fucsia */
+#age-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #8b5cf6 0%, #d946ef 100%) !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4) !important;
+}
+
+/* Estilos de Iconos FontAwesome */
+.stat-icon i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+h1 i,
+h3 i {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Estilos Tabla de Clientes Frecuentes */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+.glass-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #ffffff;
+}
+.glass-table th {
+  background: rgba(139, 92, 246, 0.1);
+  color: #c084fc;
+  padding: 12px 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid rgba(139, 92, 246, 0.2);
+}
+.glass-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.glass-table tr:hover td {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.badge-stamps {
+  background: linear-gradient(135deg, #8b5cf6, #d946ef);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pct-text {
+  font-weight: bold;
+  color: #38bdf8;
+  min-width: 25px;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}

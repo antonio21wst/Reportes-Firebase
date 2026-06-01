@@ -10,10 +10,11 @@ let emailData = {};
 let birthdayMonthData = {};
 let cpData = {};
 let promoStatusData = {};
-let albumProgressData = []; // AHORA ES UN ARRAY PARA LA TABLA
+let companyData = {}; // NUEVA variable para Sucursales
+let albumProgressData = [];
 
 const CACHE_KEY = "polloparatodos_dashboardData";
-const TOTAL_ESTAMPAS_ALBUM = 121; // <-- Asegúrate de poner el total real de tu álbum
+const TOTAL_ESTAMPAS_ALBUM = 121;
 
 function calculateAge(birthDate) {
   const today = new Date();
@@ -34,9 +35,14 @@ function updateUI(data) {
   document.getElementById("female-count").textContent = data.femaleCount;
   document.getElementById("female-percentage").textContent =
     `(${data.femalePercentage}%)`;
+
+  // Actualizar UI del nuevo género "Otros"
+  document.getElementById("other-count").textContent = data.otherCount || 0;
+  document.getElementById("other-percentage").textContent =
+    `(${data.otherPercentage || 0}%)`;
+
   document.getElementById("total-users").textContent = data.totalUsers;
   document.getElementById("promo-count").textContent = data.totalPromos || 0;
-  document.getElementById("phone-count").textContent = data.phoneCount || 0;
 
   addressData = data.addressData;
   ageData = data.ageData;
@@ -44,7 +50,8 @@ function updateUI(data) {
   birthdayMonthData = data.birthdayMonthData || {};
   cpData = data.cpData || {};
   promoStatusData = data.promoStatusData || {};
-  albumProgressData = data.albumProgressData || []; // Recibe el array de usuarios
+  companyData = data.companyData || {}; // Asignar datos de sucursales
+  albumProgressData = data.albumProgressData || [];
 
   renderCharts();
 
@@ -57,17 +64,20 @@ async function fetchUserDataFromFirestore() {
   try {
     updateStatus("Conectando y descargando datos...", "connected");
 
+    // 1. OBTENER USUARIOS
     const userQuerySnapshot = await getDocs(collection(db, "user_profile"));
     let maleCount = 0,
       femaleCount = 0,
+      otherCount = 0,
       phoneCount = 0;
     let maleAges = [],
-      femaleAges = [];
+      femaleAges = [],
+      otherAges = [];
     let tempAddressData = {},
       tempEmailData = {},
       tempBirthdayMonthData = {},
       tempCpData = {};
-    let tempAlbumProgressData = []; // Array temporal para los usuarios
+    let tempAlbumProgressData = [];
     const monthNames = [
       "Enero",
       "Febrero",
@@ -86,32 +96,28 @@ async function fetchUserDataFromFirestore() {
     userQuerySnapshot.forEach((doc) => {
       const data = doc.data();
 
+      // Clasificación Exacta de Géneros
       if (data.gender) {
         const gender = data.gender.toLowerCase().trim();
-        if (["hombre", "h", "male", "m", "masculino"].includes(gender))
+        if (["hombre", "h", "male", "m", "masculino"].includes(gender)) {
           maleCount++;
-        else if (["mujer", "f", "female", "femenino"].includes(gender))
+        } else if (["mujer", "f", "female", "femenino"].includes(gender)) {
           femaleCount++;
+        } else {
+          otherCount++; // Si no es H o M, entra aquí
+        }
       }
 
       if (data.address) {
         tempAddressData[data.address] =
           (tempAddressData[data.address] || 0) + 1;
-        const cpMatch = String(data.address).match(/\b\d{5}\b/);
-        const finalCp =
-          data.cp ||
-          data.codigoPostal ||
-          data.zipcode ||
-          (cpMatch ? cpMatch[0] : null);
-        if (finalCp) tempCpData[finalCp] = (tempCpData[finalCp] || 0) + 1;
       }
-
       if (data.phone || data.telefono || data.whatsapp) phoneCount++;
-
       if (data.email) {
         const parts = data.email.split("@");
         if (parts.length === 2) {
           const domain = parts[1].toLowerCase().trim();
+          tempEmailData[domain] = (tempEmailData[domain] || 0) + 1;
         }
       }
 
@@ -133,50 +139,36 @@ async function fetchUserDataFromFirestore() {
               maleAges.push(age);
             else if (["mujer", "f", "female", "femenino"].includes(genderLower))
               femaleAges.push(age);
+            else otherAges.push(age); // Edad de "Otros"
           }
         } catch (e) {}
       }
 
-      // NUEVO: Recolección para la tabla de Top 15
       let userStamps = 0;
-
-      // AHORA APUNTAMOS A LA ESTRUCTURA REAL:
-      // Leemos albumCount directo de la raíz, o contamos los elementos en el arreglo album
       if (data.albumCount !== undefined) {
         userStamps = Number(data.albumCount);
       } else if (data.album && Array.isArray(data.album)) {
         userStamps = data.album.length;
       }
-
-      // Evitamos que pase del 100% si hay algún error en BD
       if (userStamps > TOTAL_ESTAMPAS_ALBUM) userStamps = TOTAL_ESTAMPAS_ALBUM;
 
-      // Priorizar el nombre, si no existe usar el apellido o el correo
       let userName =
         data.name ||
         data.nombre ||
         data.email ||
         "Usuario " + doc.id.substring(0, 5);
+      if (data.surname) userName = userName + " " + data.surname;
 
-      // Si existe el apellido, lo concatenamos para que se vea más profesional
-      if (data.surname) {
-        userName = userName + " " + data.surname;
-      }
-
-      tempAlbumProgressData.push({
-        name: userName,
-        stamps: userStamps,
-      });
+      tempAlbumProgressData.push({ name: userName, stamps: userStamps });
     });
 
-    // Ordenar de mayor a menor cantidad de estampas y extraer el top 15
     tempAlbumProgressData.sort((a, b) => b.stamps - a.stamps);
     const top15Album = tempAlbumProgressData.slice(0, 15);
 
+    // 2. OBTENER PROMOCIONES
     const promoQuerySnapshot = await getDocs(collection(db, "promotion"));
     let totalPromos = 0;
     let tempPromoStatusData = {};
-
     promoQuerySnapshot.forEach((doc) => {
       const data = doc.data();
       totalPromos++;
@@ -188,6 +180,37 @@ async function fetchUserDataFromFirestore() {
       }
     });
 
+    // 3. OBTENER SUCURSALES (LÓGICA ACTUALIZADA)
+    const sucursalesSnapshot = await getDocs(collection(db, "sucursales"));
+    let tempCompanyData = {};
+
+    sucursalesSnapshot.forEach((doc) => {
+      const data = doc.data();
+
+      // Obtenemos el nombre completo y lo pasamos a minúsculas para buscar más fácil
+      const branchName = data.nombre ? data.nombre.toLowerCase() : "";
+      let companyName = "Otras / Independientes";
+
+      // Buscamos palabras clave dentro del nombre para clasificar la sucursal
+      if (branchName.includes("pollo feliz")) {
+        companyName = "Pollo Feliz";
+      } else if (branchName.includes("bachoco")) {
+        companyName = "Bachoco";
+      } else if (branchName.includes("molino")) {
+        companyName = "El Molino";
+      } else if (branchName.includes("trigon")) {
+        companyName = "Trigon";
+      } else if (branchName.includes("sabropollo")) {
+        companyName = "Sabropollo";
+      }
+
+      // Sumamos 1 al contador de la empresa correspondiente
+      tempCompanyData[companyName] = (tempCompanyData[companyName] || 0) + 1;
+    });
+
+    // 4. CÁLCULOS MATEMÁTICOS
+    const totalUsers = maleCount + femaleCount + otherCount; // Ahora incluye "Otros"
+
     const maleAgeAvg =
       maleAges.length > 0
         ? (maleAges.reduce((a, b) => a + b, 0) / maleAges.length).toFixed(1)
@@ -196,39 +219,45 @@ async function fetchUserDataFromFirestore() {
       femaleAges.length > 0
         ? (femaleAges.reduce((a, b) => a + b, 0) / femaleAges.length).toFixed(1)
         : 0;
-    const totalAgeAvg =
-      maleAges.concat(femaleAges).length > 0
-        ? (
-            maleAges.concat(femaleAges).reduce((a, b) => a + b, 0) /
-            (maleAges.length + femaleAges.length)
-          ).toFixed(1)
+    const otherAgeAvg =
+      otherAges.length > 0
+        ? (otherAges.reduce((a, b) => a + b, 0) / otherAges.length).toFixed(1)
         : 0;
+
+    const allAges = maleAges.concat(femaleAges).concat(otherAges);
+    const totalAgeAvg =
+      allAges.length > 0
+        ? (allAges.reduce((a, b) => a + b, 0) / allAges.length).toFixed(1)
+        : 0;
+
+    const ageDataObject = {
+      Hombres: parseFloat(maleAgeAvg),
+      Mujeres: parseFloat(femaleAgeAvg),
+    };
+    if (parseFloat(otherAgeAvg) > 0)
+      ageDataObject["Otros"] = parseFloat(otherAgeAvg); // Solo mostrar si hay edades
+    ageDataObject["Total"] = parseFloat(totalAgeAvg);
 
     const finalData = {
       maleCount,
       femaleCount,
-      totalUsers: maleCount + femaleCount,
+      otherCount,
+      totalUsers,
       malePercentage:
-        maleCount + femaleCount > 0
-          ? ((maleCount / (maleCount + femaleCount)) * 100).toFixed(1)
-          : 0,
+        totalUsers > 0 ? ((maleCount / totalUsers) * 100).toFixed(1) : 0,
       femalePercentage:
-        maleCount + femaleCount > 0
-          ? ((femaleCount / (maleCount + femaleCount)) * 100).toFixed(1)
-          : 0,
+        totalUsers > 0 ? ((femaleCount / totalUsers) * 100).toFixed(1) : 0,
+      otherPercentage:
+        totalUsers > 0 ? ((otherCount / totalUsers) * 100).toFixed(1) : 0,
       totalPromos,
       phoneCount,
       addressData: tempAddressData,
-      ageData: {
-        Hombres: parseFloat(maleAgeAvg),
-        Mujeres: parseFloat(femaleAgeAvg),
-        Total: parseFloat(totalAgeAvg),
-      },
+      ageData: ageDataObject,
       emailData: tempEmailData,
       birthdayMonthData: tempBirthdayMonthData,
-      cpData: tempCpData,
       promoStatusData: tempPromoStatusData,
-      albumProgressData: top15Album, // Array con los 15 mejores
+      companyData: tempCompanyData, // Exportar a caché
+      albumProgressData: top15Album,
       lastUpdateTimestamp: new Date().toISOString(),
     };
 
@@ -242,15 +271,39 @@ async function fetchUserDataFromFirestore() {
 }
 
 function renderCharts() {
+  renderCompanyChart(); // La nueva gráfica de empresas
   renderAddressChart();
   renderAgeChart();
   renderEmailChart();
   renderBirthdayChart();
   renderPromoChart();
-  renderAlbumTable(); // Llama a la nueva función de la tabla
+  renderAlbumTable();
 }
 
-// [Tus funciones renderAddressChart, renderAgeChart, renderEmailChart, renderBirthdayChart, renderCpChart y renderPromoChart quedan igual aquí]
+// NUEVA FUNCIÓN: Gráfica de Sucursales por Empresa
+function renderCompanyChart() {
+  const chart = document.getElementById("company-chart");
+  const loading = document.getElementById("loading-company");
+  if (Object.keys(companyData).length === 0) {
+    loading.textContent = "No hay datos de sucursales";
+    return;
+  }
+  const sorted = Object.entries(companyData).sort((a, b) => b[1] - a[1]);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+
+  sorted.forEach(([company, count]) => {
+    const width = (count / maxCount) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${company}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
+  });
+
+  loading.style.display = "none";
+  chart.style.display = "flex";
+}
+
 function renderAddressChart() {
   const chart = document.getElementById("address-chart");
   const loading = document.getElementById("loading-address");
@@ -342,29 +395,6 @@ function renderBirthdayChart() {
   chart.style.display = "flex";
 }
 
-function renderCpChart() {
-  const chart = document.getElementById("cp-chart");
-  const loading = document.getElementById("loading-cp");
-  if (Object.keys(cpData).length === 0) {
-    loading.textContent = "No hay datos de zonas";
-    return;
-  }
-  const sorted = Object.entries(cpData)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10);
-  chart.innerHTML = "";
-  const maxCount = Math.max(...sorted.map((item) => item[1]));
-  sorted.forEach(([cp, count]) => {
-    const width = (count / maxCount) * 100;
-    const bar = document.createElement("div");
-    bar.className = "chart-bar";
-    bar.innerHTML = `<div class="bar-label"><strong>CP ${cp}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
-    chart.appendChild(bar);
-  });
-  loading.style.display = "none";
-  chart.style.display = "flex";
-}
-
 function renderPromoChart() {
   const chart = document.getElementById("promo-chart");
   const loading = document.getElementById("loading-promo");
@@ -386,27 +416,20 @@ function renderPromoChart() {
   chart.style.display = "flex";
 }
 
-// NUEVA FUNCIÓN: Dibuja la tabla Top 15 y calcula el porcentaje faltante
 function renderAlbumTable() {
   const container = document.getElementById("album-table-container");
   const tbody = document.querySelector("#album-table tbody");
   const loading = document.getElementById("loading-album");
-
   if (!albumProgressData || albumProgressData.length === 0) {
     loading.textContent = "No hay datos suficientes para el ranking.";
     return;
   }
-
   tbody.innerHTML = "";
-
   albumProgressData.forEach((user, index) => {
     let faltantes = TOTAL_ESTAMPAS_ALBUM - user.stamps;
     let porcentajeFalta = ((faltantes / TOTAL_ESTAMPAS_ALBUM) * 100).toFixed(1);
     if (porcentajeFalta < 0) porcentajeFalta = 0;
-
-    // Calcular el avance para rellenar la barra interna de la tabla
     let porcentajeAvance = 100 - porcentajeFalta;
-
     const tr = document.createElement("tr");
     tr.innerHTML = `
           <td><strong>#${index + 1}</strong> ${user.name}</td>
@@ -422,7 +445,6 @@ function renderAlbumTable() {
       `;
     tbody.appendChild(tr);
   });
-
   loading.style.display = "none";
   container.style.display = "block";
 }
@@ -451,56 +473,4 @@ window.addEventListener("DOMContentLoaded", () => {
     updateStatus("Presiona 'Actualizar' para descargar", "connected");
   }
 });
-
 window.refreshData = refreshData;
-
-// ==========================================
-// NUEVA FUNCIÓN: EXPORTAR A PDF (Fix Definitivo)
-// ==========================================
-function exportToPDF() {
-  const btn = document.getElementById("pdf-btn");
-  const originalText = btn.innerHTML;
-  btn.innerHTML = "⏳ Generando...";
-  btn.disabled = true;
-
-  // 1. TRUCO VITAL: Subir el scroll hasta arriba antes de capturar
-  window.scrollTo(0, 0);
-
-  // 2. Seleccionamos solo el main y activamos modo PDF
-  const element = document.querySelector("main");
-  document.body.classList.add("pdf-mode");
-
-  // 3. Configuración del renderizador
-  const opt = {
-    margin: 0.4,
-    filename: "Reporte_PolloParaTodos.pdf",
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#1e293b",
-      scrollY: 0, // Fuerza a la librería a capturar desde el techo de la página
-    },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-  };
-
-  // 4. Generar el PDF
-  html2pdf()
-    .set(opt)
-    .from(element)
-    .save()
-    .then(() => {
-      document.body.classList.remove("pdf-mode");
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    })
-    .catch((err) => {
-      console.error("Error al generar PDF:", err);
-      updateStatus("Error al generar PDF", "error");
-      document.body.classList.remove("pdf-mode");
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    });
-}
-
-window.exportToPDF = exportToPDF;

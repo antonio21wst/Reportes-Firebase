@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Análisis de Usuarios - Galindo</title>
 
-    <!-- 1. CSS GLOBAL (Liquid Glass, animaciones, barra de navegación) -->
     <link rel="stylesheet" href="/css/style.css" />
-
-    <!-- 2. CSS LOCAL (Colores específicos de Galindo) -->
     <link rel="stylesheet" href="style.css" />
+    <!-- LIBRERÍA DE ÍCONOS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
 
   <body>
@@ -19,13 +21,10 @@
         .then((response) => response.text())
         .then((data) => {
           document.getElementById("navbar-placeholder").innerHTML = data;
-
-          // AUTOMATIZACIÓN DEL ESTADO ACTIVO
           const currentPath = window.location.pathname.toLowerCase();
           const navLinks = document.querySelectorAll(
             ".nav-link, .nav-home-btn",
           );
-
           navLinks.forEach((link) => {
             const href = link.getAttribute("href").toLowerCase();
             if (
@@ -44,18 +43,20 @@
     <div class="container">
       <header>
         <h1>
-          <span class="emoji-fix">📊</span> Análisis de Usuarios - Galindo
+          <i class="fa-solid fa-chart-pie"></i> Análisis de Usuarios - Galindo
         </h1>
-        <p class="subtitle">Métricas de Demografía y Servicios</p>
+        <p class="subtitle">
+          Métricas de Demografía, Servicios y Planes de Lealtad
+        </p>
       </header>
 
       <main>
         <!-- PRIMER BLOQUE: Demografía -->
         <div class="stats-container">
           <div class="stat-card today">
-            <div class="stat-icon">👨</div>
+            <div class="stat-icon"><i class="fa-solid fa-mars"></i></div>
             <div class="stat-content">
-              <h2>Hombres Registrados</h2>
+              <h2>Hombres</h2>
               <p class="stat-number">
                 <span id="male-count">-</span>
                 <span class="stat-percentage" id="male-percentage">-</span>
@@ -65,9 +66,9 @@
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon">👩</div>
+            <div class="stat-icon"><i class="fa-solid fa-venus"></i></div>
             <div class="stat-content">
-              <h2>Mujeres Registradas</h2>
+              <h2>Mujeres</h2>
               <p class="stat-number">
                 <span id="female-count">-</span>
                 <span class="stat-percentage" id="female-percentage">-</span>
@@ -76,39 +77,123 @@
             </div>
           </div>
 
-          <div class="stat-card hotels">
-            <div class="stat-icon">👥</div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-genderless"></i></div>
             <div class="stat-content">
-              <h2>Total de Usuarios</h2>
+              <h2>Otros</h2>
+              <p class="stat-number">
+                <span id="other-count">-</span>
+                <span class="stat-percentage" id="other-percentage">-</span>
+              </p>
+              <p class="stat-label">no especificado</p>
+            </div>
+          </div>
+
+          <div class="stat-card hotels">
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-content">
+              <h2>Total Usuarios</h2>
               <p class="stat-number" id="total-users">-</p>
-              <p class="stat-label">con datos disponibles</p>
+              <p class="stat-label">perfiles en BD</p>
             </div>
           </div>
         </div>
 
-        <!-- SEGUNDO BLOQUE: Servicios -->
+        <!-- SEGUNDO BLOQUE: Servicios y Operaciones -->
         <div class="stats-container" style="margin-top: 40px">
           <div class="stat-card today">
-            <div class="stat-icon">🍽️</div>
+            <div class="stat-icon"><i class="fa-solid fa-utensils"></i></div>
             <div class="stat-content">
               <h2>Restaurante La Distral</h2>
               <p class="stat-number" id="distral-count">-</p>
-              <p class="stat-label">usuarios registrados</p>
+              <p class="stat-label">afiliados al plan</p>
             </div>
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon">🧖</div>
+            <div class="stat-icon"><i class="fa-solid fa-spa"></i></div>
             <div class="stat-content">
               <h2>SPA Misaya</h2>
               <p class="stat-number" id="misaya-count">-</p>
-              <p class="stat-label">usuarios registrados</p>
+              <p class="stat-label">afiliados al plan</p>
+            </div>
+          </div>
+
+          <!-- NUEVAS TARJETAS -->
+          <div class="stat-card total">
+            <div class="stat-icon">
+              <i class="fa-solid fa-people-group"></i>
+            </div>
+            <div class="stat-content">
+              <h2>Flujo de Clientes</h2>
+              <p class="stat-number" id="spa-clients-count">-</p>
+              <p class="stat-label">personas reales en citas</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="stat-content">
+              <h2>Tiempo en Cabina</h2>
+              <p class="stat-number"><span id="avg-cabin-time">-</span> min</p>
+              <p class="stat-label">promedio por reservación</p>
             </div>
           </div>
         </div>
 
+        <!-- NUEVAS GRÁFICAS OPERATIVAS -->
         <div class="chart-container">
-          <h3>📍 Top 10 Direcciones Más Comunes</h3>
+          <h3>
+            <i class="fa-solid fa-hand-holding-hand"></i> Top Tratamientos
+            (Reservados)
+          </h3>
+          <p class="chart-description">
+            Servicios más solicitados en las reservaciones del SPA
+          </p>
+          <div class="loading" id="loading-res-service">
+            Cargando tratamientos...
+          </div>
+          <div class="chart" id="res-service-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-notes-medical"></i> Alertas Operativas de
+            Salud
+          </h3>
+          <p class="chart-description">
+            Proporción de clientes con alergias o condiciones médicas previas
+          </p>
+          <div class="loading" id="loading-health">Cargando alertas...</div>
+          <div class="chart" id="health-chart" style="display: none"></div>
+        </div>
+
+        <!-- GRÁFICAS DE MARKETING Y DEMOGRAFÍA -->
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-envelope-open-text"></i> Top Dominios de
+            Correo
+          </h3>
+          <p class="chart-description">
+            Principales proveedores de email para campañas
+          </p>
+          <div class="loading" id="loading-email">Cargando datos...</div>
+          <div class="chart" id="email-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-gift"></i> Cumpleaños por Mes</h3>
+          <p class="chart-description">
+            Distribución para promociones de cumpleaños
+          </p>
+          <div class="loading" id="loading-birthdays">Cargando datos...</div>
+          <div class="chart" id="birthdays-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-map-location-dot"></i> Top 10 Direcciones
+          </h3>
           <p class="chart-description">
             Ubicaciones con mayor cantidad de usuarios registrados
           </p>
@@ -118,18 +203,63 @@
             id="address-chart"
             style="display: none"
           ></div>
-          <div class="chart-legend">
-            <small>📍 Las direcciones más frecuentes en los registros</small>
+        </div>
+
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-cake-candles"></i> Promedio de Edades</h3>
+          <p class="chart-description">Edad promedio por género y total</p>
+          <div class="loading" id="loading-age">Cargando datos...</div>
+          <div class="chart" id="age-chart" style="display: none"></div>
+        </div>
+
+        <!-- TABLAS DE LEALTAD DUAL -->
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-crown"></i> Lealtad: La Distral</h3>
+          <p class="chart-description">
+            Top 15 clientes frecuentes del restaurante
+          </p>
+          <div class="loading" id="loading-distral-clientes">
+            Cargando lealtad Distral...
+          </div>
+          <div
+            class="table-responsive"
+            id="distral-table-container"
+            style="display: none"
+          >
+            <table class="glass-table" id="distral-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Total Visitas</th>
+                  <th>Puntos</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
 
         <div class="chart-container">
-          <h3>🎂 Promedio de Edades</h3>
-          <p class="chart-description">Edad promedio por género y total</p>
-          <div class="loading" id="loading-age">Cargando datos...</div>
-          <div class="chart" id="age-chart" style="display: none"></div>
-          <div class="chart-legend">
-            <small>🎂 Análisis de edades promedio de los usuarios</small>
+          <h3><i class="fa-solid fa-crown"></i> Lealtad: SPA Misaya</h3>
+          <p class="chart-description">Top 15 clientes frecuentes del SPA</p>
+          <div class="loading" id="loading-misaya-clientes">
+            Cargando lealtad Misaya...
+          </div>
+          <div
+            class="table-responsive"
+            id="misaya-table-container"
+            style="display: none"
+          >
+            <table class="glass-table misaya-table" id="misaya-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Total Visitas</th>
+                  <th>Puntos</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
 
@@ -141,9 +271,14 @@
 
       <footer>
         <p>Última actualización: <span id="last-update"></span></p>
-        <button onclick="refreshData()" class="refresh-btn">
-          🔄 Actualizar
-        </button>
+        <div style="display: flex; gap: 10px">
+          <button onclick="refreshData()" class="refresh-btn">
+            <i class="fa-solid fa-rotate-right"></i> Actualizar
+          </button>
+          <button onclick="window.print()" class="export-btn" id="pdf-btn">
+            <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+          </button>
+        </div>
       </footer>
     </div>
 

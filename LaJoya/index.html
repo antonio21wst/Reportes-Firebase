@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Análisis de Usuarios - LaJoya</title>
 
-    <!-- 1. CSS GLOBAL (Fondo animado, NavBar, Liquid Glass base) -->
     <link rel="stylesheet" href="/css/style.css" />
-
-    <!-- 2. CSS LOCAL (Colores específicos de La Joya) -->
     <link rel="stylesheet" href="style.css" />
+
+    <!-- LIBRERÍA DE ÍCONOS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
 
   <body>
@@ -20,7 +23,6 @@
         .then((data) => {
           document.getElementById("navbar-placeholder").innerHTML = data;
 
-          // AUTOMATIZACIÓN DEL ESTADO ACTIVO
           const currentPath = window.location.pathname.toLowerCase();
           const navLinks = document.querySelectorAll(
             ".nav-link, .nav-home-btn",
@@ -28,8 +30,6 @@
 
           navLinks.forEach((link) => {
             const href = link.getAttribute("href").toLowerCase();
-
-            // Verifica si la URL actual coincide o termina con el href del enlace
             if (
               currentPath === href ||
               (currentPath === "/" && href === "/index.html") ||
@@ -45,16 +45,19 @@
     </script>
     <div class="container">
       <header>
-        <h1><span class="emoji-fix">📊</span> Análisis de Usuarios - LaJoya</h1>
+        <h1>
+          <i class="fa-solid fa-chart-pie"></i> Análisis de Usuarios - LaJoya
+        </h1>
         <p class="subtitle">Reporte Demográfico y Ubicaciones</p>
       </header>
 
       <main>
+        <!-- 1. TARJETAS DE MÉTRICAS -->
         <div class="stats-container">
           <div class="stat-card today">
-            <div class="stat-icon">👨</div>
+            <div class="stat-icon"><i class="fa-solid fa-mars"></i></div>
             <div class="stat-content">
-              <h2>Hombres Registrados</h2>
+              <h2>Hombres</h2>
               <p class="stat-number">
                 <span id="male-count">-</span>
                 <span class="stat-percentage" id="male-percentage">-</span>
@@ -64,9 +67,9 @@
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon">👩</div>
+            <div class="stat-icon"><i class="fa-solid fa-venus"></i></div>
             <div class="stat-content">
-              <h2>Mujeres Registradas</h2>
+              <h2>Mujeres</h2>
               <p class="stat-number">
                 <span id="female-count">-</span>
                 <span class="stat-percentage" id="female-percentage">-</span>
@@ -75,18 +78,84 @@
             </div>
           </div>
 
-          <div class="stat-card hotels">
-            <div class="stat-icon">👥</div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-genderless"></i></div>
             <div class="stat-content">
-              <h2>Total de Usuarios</h2>
+              <h2>Otros</h2>
+              <p class="stat-number">
+                <span id="other-count">-</span>
+                <span class="stat-percentage" id="other-percentage">-</span>
+              </p>
+              <p class="stat-label">no especificado</p>
+            </div>
+          </div>
+
+          <div class="stat-card hotels">
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-content">
+              <h2>Total Usuarios</h2>
               <p class="stat-number" id="total-users">-</p>
-              <p class="stat-label">con datos disponibles</p>
+              <p class="stat-label">perfiles en BD</p>
+            </div>
+          </div>
+
+          <!-- NUEVAS TARJETAS: Visitas y Puntos -->
+          <div class="stat-card total">
+            <div class="stat-icon">
+              <i class="fa-solid fa-bell-concierge"></i>
+            </div>
+            <div class="stat-content">
+              <h2>Total de Visitas</h2>
+              <p class="stat-number" id="visitas-count">-</p>
+              <p class="stat-label">registradas históricamente</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="stat-content">
+              <h2>Puntos Emitidos</h2>
+              <p class="stat-number" id="points-count">-</p>
+              <p class="stat-label">puntos de lealtad en BD</p>
             </div>
           </div>
         </div>
 
+        <!-- 2. GRÁFICAS DEL NEGOCIO Y MARKETING -->
         <div class="chart-container">
-          <h3>📍 Top 10 Direcciones Más Comunes</h3>
+          <h3><i class="fa-solid fa-spa"></i> Servicios Preferidos</h3>
+          <p class="chart-description">
+            Áreas más utilizadas por los clientes (ej. Hospedaje, Restaurante)
+          </p>
+          <div class="loading" id="loading-service">Cargando servicios...</div>
+          <div class="chart" id="service-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-envelope-open-text"></i> Top Dominios de
+            Correo
+          </h3>
+          <p class="chart-description">
+            Principales proveedores de email para campañas de marketing
+          </p>
+          <div class="loading" id="loading-email">Cargando datos...</div>
+          <div class="chart" id="email-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-gift"></i> Cumpleaños por Mes</h3>
+          <p class="chart-description">
+            Distribución para envíos de promociones de cumpleaños
+          </p>
+          <div class="loading" id="loading-birthdays">Cargando datos...</div>
+          <div class="chart" id="birthdays-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-map-location-dot"></i> Top 10 Direcciones
+          </h3>
           <p class="chart-description">
             Ubicaciones con mayor cantidad de usuarios registrados
           </p>
@@ -95,23 +164,40 @@
             class="chart hotels-chart"
             id="address-chart"
             style="display: none"
-          >
-            <!-- Los datos se cargarán aquí dinámicamente -->
-          </div>
-          <div class="chart-legend">
-            <small>📍 Las direcciones más frecuentes en los registros</small>
-          </div>
+          ></div>
         </div>
 
         <div class="chart-container">
-          <h3>🎂 Promedio de Edades</h3>
+          <h3><i class="fa-solid fa-cake-candles"></i> Promedio de Edades</h3>
           <p class="chart-description">Edad promedio por género y total</p>
           <div class="loading" id="loading-age">Cargando datos...</div>
-          <div class="chart" id="age-chart" style="display: none">
-            <!-- Los datos se cargarán aquí dinámicamente -->
-          </div>
-          <div class="chart-legend">
-            <small>🎂 Análisis de edades promedio de los usuarios</small>
+          <div class="chart" id="age-chart" style="display: none"></div>
+        </div>
+
+        <!-- 3. TABLA DE LEALTAD -->
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-crown"></i> Clientes Frecuentes</h3>
+          <p class="chart-description">
+            Ranking de usuarios con mayor número de visitas y puntos acumulados
+          </p>
+          <div class="loading" id="loading-clientes">Cargando lealtad...</div>
+          <div
+            class="table-responsive"
+            id="clientes-table-container"
+            style="display: none"
+          >
+            <table class="glass-table" id="clientes-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Total Visitas</th>
+                  <th>Puntos de Lealtad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Los datos se inyectarán aquí -->
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -123,9 +209,14 @@
 
       <footer>
         <p>Última actualización: <span id="last-update"></span></p>
-        <button onclick="refreshData()" class="refresh-btn">
-          🔄 Actualizar
-        </button>
+        <div style="display: flex; gap: 10px">
+          <button onclick="refreshData()" class="refresh-btn">
+            <i class="fa-solid fa-rotate-right"></i> Actualizar
+          </button>
+          <button onclick="window.print()" class="export-btn" id="pdf-btn">
+            <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+          </button>
+        </div>
       </footer>
     </div>
 

@@ -7,7 +7,11 @@ import {
 let addressData = {};
 let ageData = {};
 let serviceData = {};
+let resGenderData = {};
 let topClientesData = [];
+// NUEVAS VARIABLES
+let emailData = {};
+let birthdayMonthData = {};
 
 const CACHE_KEY = "chapultepec_dashboardData";
 
@@ -35,13 +39,18 @@ function updateUI(data) {
     `(${data.otherPercentage || 0}%)`;
 
   document.getElementById("total-users").textContent = data.totalUsers;
-  document.getElementById("phone-count").textContent = data.phoneCount || 0;
+  document.getElementById("reservations-count").textContent =
+    data.totalReservations || 0;
   document.getElementById("visitas-count").textContent = data.totalVisitas || 0;
 
   addressData = data.addressData || {};
   ageData = data.ageData || {};
   serviceData = data.serviceData || {};
+  resGenderData = data.resGenderData || {};
   topClientesData = data.topClientesData || [];
+  // ASIGNAR NUEVAS VARIABLES
+  emailData = data.emailData || {};
+  birthdayMonthData = data.birthdayMonthData || {};
 
   renderCharts();
 
@@ -52,13 +61,13 @@ function updateUI(data) {
 
 async function fetchUserDataFromFirestore() {
   try {
-    updateStatus("Conectando y descargando datos...", "connected");
+    updateStatus("Conectando y cruzando datos...", "connected");
+
     const querySnapshot = await getDocs(collection(db, "user_profile"));
 
     let maleCount = 0,
       femaleCount = 0,
       otherCount = 0,
-      phoneCount = 0,
       totalVisitas = 0;
     let maleAges = [],
       femaleAges = [],
@@ -66,39 +75,73 @@ async function fetchUserDataFromFirestore() {
     let tempAddressData = {},
       tempServiceData = {};
     let tempClientesData = [];
+    // NUEVAS VARIABLES TEMPORALES
+    let tempEmailData = {},
+      tempBirthdayMonthData = {};
+    const monthNames = [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ];
+
+    let userGendersByEmail = {};
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
 
-      // Género
       if (data.gender) {
         const gender = data.gender.toLowerCase().trim();
-        if (["hombre", "h", "male", "m", "masculino"].includes(gender))
+        if (["hombre", "h", "male", "m", "masculino"].includes(gender)) {
           maleCount++;
-        else if (["mujer", "f", "female", "femenino"].includes(gender))
+          if (data.email)
+            userGendersByEmail[data.email.toLowerCase().trim()] = "Hombres";
+        } else if (["mujer", "f", "female", "femenino"].includes(gender)) {
           femaleCount++;
-        else otherCount++;
+          if (data.email)
+            userGendersByEmail[data.email.toLowerCase().trim()] = "Mujeres";
+        } else {
+          otherCount++;
+          if (data.email)
+            userGendersByEmail[data.email.toLowerCase().trim()] = "Otros";
+        }
       }
 
-      // Teléfonos
-      if (data.phone || data.telefono || data.whatsapp) phoneCount++;
-
-      // Direcciones
       if (data.address)
         tempAddressData[data.address] =
           (tempAddressData[data.address] || 0) + 1;
-
-      // Servicios (Ej. "Azur Restaurante")
       if (data.service)
         tempServiceData[data.service] =
           (tempServiceData[data.service] || 0) + 1;
 
-      // Edades
+      // EXTRAER CORREOS
+      if (data.email) {
+        const parts = data.email.split("@");
+        if (parts.length === 2) {
+          const domain = parts[1].toLowerCase().trim();
+          tempEmailData[domain] = (tempEmailData[domain] || 0) + 1;
+        }
+      }
+
+      // EXTRAER CUMPLEAÑOS
       if (data.birthday) {
         try {
           let birthDate = data.birthday.toDate
             ? data.birthday.toDate()
             : new Date(data.birthday);
+          const month = monthNames[birthDate.getMonth()];
+          if (month)
+            tempBirthdayMonthData[month] =
+              (tempBirthdayMonthData[month] || 0) + 1;
+
           const age = calculateAge(birthDate);
           if (age !== null) {
             const gLower = data.gender ? data.gender.toLowerCase().trim() : "";
@@ -111,15 +154,12 @@ async function fetchUserDataFromFirestore() {
         } catch (e) {}
       }
 
-      // Lealtad: Visitas y Puntos
       let userVisitas = Number(data.visitas) || 0;
       let userPoints = Number(data.points) || 0;
       totalVisitas += userVisitas;
 
       let userName =
         data.name || data.email || "Usuario " + doc.id.substring(0, 5);
-
-      // Solo agregamos a la tabla los que tengan al menos 1 visita o puntos
       if (userVisitas > 0 || userPoints > 0) {
         tempClientesData.push({
           name: userName,
@@ -129,11 +169,31 @@ async function fetchUserDataFromFirestore() {
       }
     });
 
-    // Ordenar Top Clientes por número de visitas y sacar los 15 mejores
     tempClientesData.sort((a, b) => b.visitas - a.visitas);
     const finalTopClientes = tempClientesData.slice(0, 15);
 
-    // Promedios de Edad
+    const resSnapshot = await getDocs(collection(db, "reservations"));
+    let totalReservations = 0;
+    let tempResGenderData = {
+      Mujeres: 0,
+      Hombres: 0,
+      Otros: 0,
+      "No Identificado": 0,
+    };
+
+    resSnapshot.forEach((doc) => {
+      const data = doc.data();
+      totalReservations++;
+      if (data.email) {
+        const email = data.email.toLowerCase().trim();
+        const matchedGender = userGendersByEmail[email];
+        if (matchedGender) tempResGenderData[matchedGender]++;
+        else tempResGenderData["No Identificado"]++;
+      } else {
+        tempResGenderData["No Identificado"]++;
+      }
+    });
+
     const totalUsers = maleCount + femaleCount + otherCount;
     const maleAgeAvg =
       maleAges.length > 0
@@ -147,7 +207,6 @@ async function fetchUserDataFromFirestore() {
       otherAges.length > 0
         ? (otherAges.reduce((a, b) => a + b, 0) / otherAges.length).toFixed(1)
         : 0;
-
     const allAges = maleAges.concat(femaleAges).concat(otherAges);
     const totalAgeAvg =
       allAges.length > 0
@@ -162,13 +221,17 @@ async function fetchUserDataFromFirestore() {
       tempAgeData["Otros"] = parseFloat(otherAgeAvg);
     tempAgeData["Total"] = parseFloat(totalAgeAvg);
 
+    Object.keys(tempResGenderData).forEach((key) => {
+      if (tempResGenderData[key] === 0) delete tempResGenderData[key];
+    });
+
     const finalData = {
       maleCount,
       femaleCount,
       otherCount,
       totalUsers,
-      phoneCount,
       totalVisitas,
+      totalReservations,
       malePercentage:
         totalUsers > 0 ? ((maleCount / totalUsers) * 100).toFixed(1) : 0,
       femalePercentage:
@@ -178,6 +241,9 @@ async function fetchUserDataFromFirestore() {
       addressData: tempAddressData,
       ageData: tempAgeData,
       serviceData: tempServiceData,
+      resGenderData: tempResGenderData,
+      emailData: tempEmailData,
+      birthdayMonthData: tempBirthdayMonthData,
       topClientesData: finalTopClientes,
       lastUpdateTimestamp: new Date().toISOString(),
     };
@@ -193,9 +259,81 @@ async function fetchUserDataFromFirestore() {
 
 function renderCharts() {
   renderServiceChart();
+  renderResGenderChart();
   renderAddressChart();
   renderAgeChart();
+  renderEmailChart(); // RENDEREAR CORREOS
+  renderBirthdayChart(); // RENDEREAR CUMPLEAÑOS
   renderClientesTable();
+}
+
+// FUNCIONES NUEVAS PARA RENDERIZAR
+function renderEmailChart() {
+  const chart = document.getElementById("email-chart");
+  const loading = document.getElementById("loading-email");
+  if (Object.keys(emailData).length === 0) {
+    loading.textContent = "No hay datos de correo";
+    return;
+  }
+  const sorted = Object.entries(emailData)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+  sorted.forEach(([domain, count]) => {
+    const width = (count / maxCount) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${domain}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
+  });
+  loading.style.display = "none";
+  chart.style.display = "flex";
+}
+
+function renderBirthdayChart() {
+  const chart = document.getElementById("birthdays-chart");
+  const loading = document.getElementById("loading-birthdays");
+  if (Object.keys(birthdayMonthData).length === 0) {
+    loading.textContent = "No hay datos de fechas";
+    return;
+  }
+  const sorted = Object.entries(birthdayMonthData)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+  sorted.forEach(([month, count]) => {
+    const width = (count / maxCount) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${month}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
+  });
+  loading.style.display = "none";
+  chart.style.display = "flex";
+}
+
+// FUNCIONES EXISTENTES
+function renderResGenderChart() {
+  const chart = document.getElementById("res-gender-chart");
+  const loading = document.getElementById("loading-res-gender");
+  if (Object.keys(resGenderData).length === 0) {
+    loading.textContent = "No hay datos de reservaciones";
+    return;
+  }
+  const sorted = Object.entries(resGenderData).sort((a, b) => b[1] - a[1]);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+  sorted.forEach(([genderGroup, count]) => {
+    const width = (count / maxCount) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${genderGroup}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
+  });
+  loading.style.display = "none";
+  chart.style.display = "flex";
 }
 
 function renderServiceChart() {
@@ -205,11 +343,9 @@ function renderServiceChart() {
     loading.textContent = "No hay datos disponibles";
     return;
   }
-
   const sorted = Object.entries(serviceData).sort((a, b) => b[1] - a[1]);
   chart.innerHTML = "";
   const maxCount = Math.max(...sorted.map((item) => item[1]));
-
   sorted.forEach(([service, count]) => {
     const width = (count / maxCount) * 100;
     const bar = document.createElement("div");
@@ -270,19 +406,15 @@ function renderClientesTable() {
   const container = document.getElementById("clientes-table-container");
   const tbody = document.querySelector("#clientes-table tbody");
   const loading = document.getElementById("loading-clientes");
-
   if (!topClientesData || topClientesData.length === 0) {
     loading.textContent = "No hay clientes con visitas registradas.";
     return;
   }
-
   tbody.innerHTML = "";
   const maxVisitas =
     topClientesData[0].visitas > 0 ? topClientesData[0].visitas : 1;
-
   topClientesData.forEach((user, index) => {
     let porcentajeAvance = (user.visitas / maxVisitas) * 100;
-
     const tr = document.createElement("tr");
     tr.innerHTML = `
           <td><strong>#${index + 1}</strong> ${user.name}</td>
@@ -298,7 +430,6 @@ function renderClientesTable() {
       `;
     tbody.appendChild(tr);
   });
-
   loading.style.display = "none";
   container.style.display = "block";
 }

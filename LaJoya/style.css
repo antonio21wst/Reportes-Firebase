@@ -39,3 +39,302 @@
   );
   border-color: rgba(14, 165, 233, 0.3);
 }
+
+/* =========================================
+   ESTILOS DE BOTONES Y NUEVAS TARJETAS
+   ========================================= */
+/* La Joya Theme: 1(Ruby), 2(Zafiro), 3(Cyan), 4(Amatista) */
+.stat-card:nth-child(3) .stat-icon {
+  /* Otros - Cyan */
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.2),
+    rgba(14, 165, 233, 0.05)
+  );
+  border-color: rgba(14, 165, 233, 0.3);
+}
+.stat-card:nth-child(4) .stat-icon {
+  /* Total - Amatista Oscuro */
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.2),
+    rgba(139, 92, 246, 0.05)
+  );
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.stat-icon i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+h1 i,
+h3 i {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Estilo Botón PDF - Color Rubí La Joya */
+.export-btn {
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+  backdrop-filter: blur(10px);
+}
+.export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #be123c, #e11d48);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(225, 29, 72, 0.4);
+}
+.export-btn i {
+  margin-right: 5px;
+}
+
+/* =========================================
+   SISTEMA NATIVO DE EXPORTACIÓN A PDF
+   ========================================= */
+@page {
+  margin: 0;
+}
+@media print {
+  #navbar-placeholder,
+  footer,
+  .refresh-btn,
+  .export-btn,
+  .hotel-search,
+  .status-indicator {
+    display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background-color: #585e68 !important;
+    margin: 0;
+    padding: 1.5cm !important;
+  }
+  .chart-container,
+  .stat-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important;
+    margin-bottom: 25px !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  .stats-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .stat-card {
+    flex: 1 1 150px !important;
+  }
+}
+/* =========================================
+   ESTILOS DE BOTONES Y NUEVAS TARJETAS
+   ========================================= */
+/* La Joya Theme: 1(Ruby), 2(Zafiro), 3(Cyan), 4(Amatista) */
+.stat-card:nth-child(3) .stat-icon {
+  /* Otros - Cyan */
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.2),
+    rgba(14, 165, 233, 0.05)
+  );
+  border-color: rgba(14, 165, 233, 0.3);
+}
+.stat-card:nth-child(4) .stat-icon {
+  /* Total - Amatista Oscuro */
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.2),
+    rgba(139, 92, 246, 0.05)
+  );
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.stat-icon i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+h1 i,
+h3 i {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Estilo Botón PDF - Color Rubí La Joya */
+.export-btn {
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+  backdrop-filter: blur(10px);
+}
+.export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #be123c, #e11d48);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(225, 29, 72, 0.4);
+}
+.export-btn i {
+  margin-right: 5px;
+}
+
+/* =========================================
+   SISTEMA NATIVO DE EXPORTACIÓN A PDF
+   ========================================= */
+@page {
+  margin: 0;
+}
+@media print {
+  #navbar-placeholder,
+  footer,
+  .refresh-btn,
+  .export-btn,
+  .hotel-search,
+  .status-indicator {
+    display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background-color: #585e68 !important;
+    margin: 0;
+    padding: 1.5cm !important;
+  }
+  .chart-container,
+  .stat-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important;
+    margin-bottom: 25px !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  .stats-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .stat-card {
+    flex: 1 1 150px !important;
+  }
+}
+
+/* =========================================
+   ESTILOS DE NUEVAS TARJETAS Y GRÁFICAS (La Joya)
+   ========================================= */
+.stat-card:nth-child(5) .stat-icon {
+  /* Visitas - Rosa Claro */
+  background: linear-gradient(
+    135deg,
+    rgba(244, 63, 94, 0.2),
+    rgba(244, 63, 94, 0.05)
+  );
+  border-color: rgba(244, 63, 94, 0.3);
+}
+.stat-card:nth-child(6) .stat-icon {
+  /* Puntos - Zafiro Oscuro */
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.2),
+    rgba(37, 99, 235, 0.05)
+  );
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+/* Gráfica de Servicios: Rosa a Naranja */
+#service-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f43f5e 0%, #fb923c 100%) !important;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4) !important;
+}
+
+/* Gráfica de Correos: Cyan a Azul Claro */
+#email-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%) !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4) !important;
+}
+
+/* Gráfica de Cumpleaños: Violeta a Rosa */
+#birthdays-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #8b5cf6 0%, #d946ef 100%) !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4) !important;
+}
+
+/* Estilos Tabla de Clientes Frecuentes */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+.glass-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #ffffff;
+}
+.glass-table th {
+  background: rgba(37, 99, 235, 0.1);
+  color: #60a5fa;
+  padding: 12px 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid rgba(37, 99, 235, 0.2);
+}
+.glass-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.glass-table tr:hover td {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.badge-stamps {
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pct-text {
+  font-weight: bold;
+  color: #60a5fa;
+  min-width: 25px;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}

@@ -39,3 +39,202 @@
   );
   border-color: rgba(100, 116, 139, 0.3);
 }
+/* =========================================
+   ESTILOS DE BOTONES Y NUEVAS GRÁFICAS (Tijon)
+   ========================================= */
+
+/* Gráfica de Correos: Gradiente Azul Índigo */
+#email-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #4f46e5 0%, #818cf8 100%) !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4) !important;
+}
+
+/* Gráfica de Cumpleaños: Gradiente Rosa Pastel */
+#birthdays-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #db2777 0%, #f472b6 100%) !important;
+  box-shadow: 0 4px 12px rgba(219, 39, 119, 0.4) !important;
+}
+
+/* Nueva Tarjeta "Otros" */
+.stat-card:nth-child(3) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(219, 39, 119, 0.2),
+    rgba(219, 39, 119, 0.05)
+  );
+  border-color: rgba(219, 39, 119, 0.3);
+}
+
+.stat-icon i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+h1 i,
+h3 i {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Estilo Botón PDF - Color Púrpura Tijon */
+.export-btn {
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  backdrop-filter: blur(10px);
+}
+.export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(124, 58, 237, 0.4);
+}
+.export-btn i {
+  margin-right: 5px;
+}
+
+/* =========================================
+   SISTEMA NATIVO DE EXPORTACIÓN A PDF
+   ========================================= */
+@page {
+  margin: 0;
+}
+@media print {
+  #navbar-placeholder,
+  footer,
+  .refresh-btn,
+  .export-btn,
+  .hotel-search,
+  .status-indicator {
+    display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background-color: #585e68 !important;
+    margin: 0;
+    padding: 1.5cm !important;
+  }
+  .chart-container,
+  .stat-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important;
+    margin-bottom: 25px !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  .stats-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .stat-card {
+    flex: 1 1 150px !important;
+  }
+}
+
+/* =========================================
+   ESTILOS DE NUEVAS MÉTRICAS (Tijon)
+   ========================================= */
+.stat-card:nth-child(5) .stat-icon {
+  /* Perfumes - Oro/Dorado */
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.2),
+    rgba(245, 158, 11, 0.05)
+  );
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.stat-card:nth-child(6) .stat-icon {
+  /* Visitas - Esmeralda */
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.2),
+    rgba(16, 185, 129, 0.05)
+  );
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Gráfica de Idiomas: Oro a Naranja */
+#lang-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f59e0b 0%, #ea580c 100%) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Gráfica de Aromas (Scents): Magenta a Rosa */
+#scent-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #d946ef 0%, #ec4899 100%) !important;
+  box-shadow: 0 4px 12px rgba(217, 70, 239, 0.4) !important;
+}
+
+/* Estilos Tabla de Clientes Frecuentes */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+.glass-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #ffffff;
+}
+.glass-table th {
+  background: rgba(124, 58, 237, 0.1);
+  color: #c084fc;
+  padding: 12px 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid rgba(124, 58, 237, 0.2);
+}
+.glass-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.glass-table tr:hover td {
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.badge-stamps {
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pct-text {
+  font-weight: bold;
+  color: #c084fc;
+  min-width: 25px;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7 0%, #c084fc 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}

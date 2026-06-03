@@ -194,3 +194,132 @@ h3 i {
   transition: width 0.5s ease;
   min-width: 2px;
 }
+/* =========================================
+   BOTÓN DE EXPORTAR PDF
+   ========================================= */
+.export-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.4);
+}
+
+.export-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Color para la nueva tarjeta de Reservaciones (Quinta tarjeta) */
+.stat-card:nth-child(5) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.2),
+    rgba(56, 189, 248, 0.05)
+  );
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+/* Gráfica de Reservaciones por Género: Gradiente Cyan/Azul */
+#res-gender-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #38bdf8 0%, #3b82f6 100%) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+/* =========================================
+   SISTEMA NATIVO DE EXPORTACIÓN A PDF
+   ========================================= */
+
+@page {
+  margin: 0;
+}
+
+@media print {
+  /* 1. Ocultar elementos de navegación y botones */
+  #navbar-placeholder,
+  footer,
+  .refresh-btn,
+  .export-btn,
+  .hotel-search {
+    display: none !important;
+  }
+
+  /* 2. FORZAR al navegador a dibujar fondos, gradientes y colores exactos */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background-color: #585e68 !important;
+    margin: 0;
+    padding: 1.5cm !important;
+  }
+
+  /* 3. FIX DE CORTES: Forzar que las tarjetas y gráficas sean "bloques" irrompibles */
+  .chart-container,
+  .stat-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important; /* CRÍTICO: Evita que el motor se confunda con Flexbox */
+    margin-bottom: 25px !important;
+  }
+
+  /* 4. FIX DE CORTES EN LA TABLA: Reglas estrictas para filas y encabezados */
+  .table-responsive {
+    overflow: visible !important; /* Evita que el scroll interno corte la tabla */
+  }
+  table {
+    page-break-inside: auto !important;
+  }
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
+  thead {
+    display: table-header-group !important; /* Si la tabla es muy larga, repite el título arriba de la nueva hoja */
+  }
+  tbody,
+  tfoot {
+    display: table-row-group !important;
+  }
+
+  /* 5. Quitar sombras que a veces arruinan el renderizado */
+  .stat-card,
+  .chart-container {
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* 6. Mantener las tarjetas de arriba en estructura de cuadrícula */
+  .stats-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .stat-card {
+    flex: 1 1 150px !important;
+  }
+}
+
+/* Gráfica de Correos: Gradiente Dorado a Fuego */
+#email-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Gráfica de Cumpleaños: Gradiente Rosa a Naranja */
+#birthdays-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #f43f5e 0%, #f97316 100%) !important;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4) !important;
+}

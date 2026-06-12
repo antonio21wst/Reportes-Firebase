@@ -1,5 +1,7 @@
 // Firebase Web SDK Configuration
 // This configuration is for client-side Firebase usage
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqBAhnC4jmrtC8jTnNrfv7xUrawQLnI9M",
@@ -25,3 +27,9 @@ const firebaseConfig = {
 //   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 //   const app = initializeApp(firebaseConfig);
 // </script>
+
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+
+// LA PALABRA CLAVE "export" ES LA QUE SOLUCIONA TU ERROR DE CONSOLA
+export const db = getFirestore(app);

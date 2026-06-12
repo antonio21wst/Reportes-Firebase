@@ -47,3 +47,217 @@
   );
   border-color: rgba(180, 83, 9, 0.3);
 }
+/* =========================================
+   IDENTIDAD VISUAL - GOURMET CARD
+   ========================================= */
+
+/* Gráfica de Direcciones: Gradiente Borgoña / Rojo Vino */
+#address-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #9f1239 0%, #e11d48 100%) !important;
+  box-shadow: 0 4px 12px rgba(159, 18, 57, 0.4) !important;
+}
+
+/* Gráfica de Edades: Gradiente Oro / Mostaza */
+#age-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #d97706 0%, #fbbf24 100%) !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4) !important;
+}
+
+/* Gráfica de Correos: Gradiente Carbón / Plata */
+#email-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #374151 0%, #9ca3af 100%) !important;
+  box-shadow: 0 4px 12px rgba(55, 65, 81, 0.4) !important;
+}
+
+/* Gráfica de Cumpleaños: Gradiente Naranja / Coral */
+#birthdays-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #ea580c 0%, #fb923c 100%) !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4) !important;
+}
+
+/* Tarjetas Superiores */
+.stat-card:nth-child(1) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.2),
+    rgba(59, 130, 246, 0.05)
+  );
+  border-color: rgba(59, 130, 246, 0.3);
+}
+.stat-card:nth-child(2) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(225, 29, 72, 0.2),
+    rgba(225, 29, 72, 0.05)
+  );
+  border-color: rgba(225, 29, 72, 0.3);
+}
+.stat-card:nth-child(3) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(217, 119, 6, 0.2),
+    rgba(217, 119, 6, 0.05)
+  );
+  border-color: rgba(217, 119, 6, 0.3);
+}
+.stat-card:nth-child(4) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(156, 163, 175, 0.2),
+    rgba(156, 163, 175, 0.05)
+  );
+  border-color: rgba(156, 163, 175, 0.3);
+}
+.stat-card:nth-child(5) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.2),
+    rgba(16, 185, 129, 0.05)
+  );
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.stat-card:nth-child(6) .stat-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.2),
+    rgba(245, 158, 11, 0.05)
+  );
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stat-icon i {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+h1 i,
+h3 i {
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Estilos Tabla de Clientes Frecuentes */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+.glass-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: #ffffff;
+}
+.glass-table th {
+  background: rgba(159, 18, 57, 0.1);
+  color: #fb7185;
+  padding: 12px 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  border-bottom: 2px solid rgba(159, 18, 57, 0.2);
+}
+.glass-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.glass-table tr:hover td {
+  background: rgba(159, 18, 57, 0.05);
+}
+
+.badge-stamps {
+  background: linear-gradient(135deg, #be123c, #e11d48);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pct-text {
+  font-weight: bold;
+  color: #fb7185;
+  min-width: 25px;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e11d48 0%, #fb7185 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}
+
+/* Botón PDF */
+.export-btn {
+  background: linear-gradient(135deg, #9f1239, #e11d48);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(159, 18, 57, 0.3);
+  backdrop-filter: blur(10px);
+}
+.export-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #881337, #be123c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(159, 18, 57, 0.4);
+}
+.export-btn i {
+  margin-right: 5px;
+}
+
+/* Impresión */
+@page {
+  margin: 0;
+}
+@media print {
+  #navbar-placeholder,
+  footer,
+  .refresh-btn,
+  .export-btn,
+  .status-indicator {
+    display: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background-color: #585e68 !important;
+    margin: 0;
+    padding: 1.5cm !important;
+  }
+  .chart-container,
+  .stat-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important;
+    margin-bottom: 25px !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  .stats-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .stat-card {
+    flex: 1 1 150px !important;
+  }
+}

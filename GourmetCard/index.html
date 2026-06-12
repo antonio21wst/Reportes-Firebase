@@ -3,11 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plan de Lealtad - Gourmet Card</title>
+    <title>Análisis de Usuarios - Gourmet Card</title>
 
     <link rel="stylesheet" href="/css/style.css" />
-
     <link rel="stylesheet" href="style.css" />
+    <!-- LIBRERÍA DE ÍCONOS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
 
   <body>
@@ -17,17 +21,12 @@
         .then((response) => response.text())
         .then((data) => {
           document.getElementById("navbar-placeholder").innerHTML = data;
-
-          // AUTOMATIZACIÓN DEL ESTADO ACTIVO
           const currentPath = window.location.pathname.toLowerCase();
           const navLinks = document.querySelectorAll(
             ".nav-link, .nav-home-btn",
           );
-
           navLinks.forEach((link) => {
             const href = link.getAttribute("href").toLowerCase();
-
-            // Verifica si la URL actual coincide o termina con el href del enlace
             if (
               currentPath === href ||
               (currentPath === "/" && href === "/index.html") ||
@@ -41,114 +40,179 @@
         })
         .catch((error) => console.error("Error loading header:", error));
     </script>
+
     <div class="container">
       <header>
         <h1>
-          <span class="emoji-fix">📊</span> Plan de Lealtad - Gourmet Card
+          <i class="fa-solid fa-utensils"></i> Análisis de Usuarios - Gourmet
+          Card
         </h1>
-        <p class="subtitle">Conteo diario de registros</p>
+        <p class="subtitle">Métricas de Membresías, Demografía y Marketing</p>
       </header>
 
       <main>
+        <!-- 1. TARJETAS DE MÉTRICAS -->
         <div class="stats-container">
           <div class="stat-card today">
-            <div class="stat-icon">📈</div>
+            <div class="stat-icon"><i class="fa-solid fa-mars"></i></div>
             <div class="stat-content">
-              <h2>Registros Hoy</h2>
-              <p class="stat-number" id="today-count">-</p>
-              <p class="stat-date" id="today-date"></p>
+              <h2>Hombres</h2>
+              <p class="stat-number">
+                <span id="male-count">-</span>
+                <span class="stat-percentage" id="male-percentage">-</span>
+              </p>
+              <p class="stat-label">registrados</p>
             </div>
           </div>
 
           <div class="stat-card yesterday">
-            <div class="stat-icon">📊</div>
+            <div class="stat-icon"><i class="fa-solid fa-venus"></i></div>
             <div class="stat-content">
-              <h2>Registros Ayer</h2>
-              <p class="stat-number" id="yesterday-count">-</p>
-              <p class="stat-date" id="yesterday-date"></p>
+              <h2>Mujeres</h2>
+              <p class="stat-number">
+                <span id="female-count">-</span>
+                <span class="stat-percentage" id="female-percentage">-</span>
+              </p>
+              <p class="stat-label">registradas</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-genderless"></i></div>
+            <div class="stat-content">
+              <h2>Otros</h2>
+              <p class="stat-number">
+                <span id="other-count">-</span>
+                <span class="stat-percentage" id="other-percentage">-</span>
+              </p>
+              <p class="stat-label">no especificado</p>
             </div>
           </div>
 
           <div class="stat-card hotels">
-            <div class="stat-icon">🏨</div>
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
             <div class="stat-content">
-              <h2>Buscar por Hotel</h2>
-              <div class="hotel-search">
-                <input
-                  type="text"
-                  id="hotel-search-input"
-                  placeholder="Ingresa ID del hotel"
-                  maxlength="20"
-                />
-                <button id="hotel-search-btn" onclick="searchHotel()">
-                  🔍
-                </button>
-              </div>
-              <p class="stat-number" id="hotel-result">-</p>
-              <p class="stat-label" id="hotel-label">usuarios registrados</p>
+              <h2>Total Usuarios</h2>
+              <p class="stat-number" id="total-users">-</p>
+              <p class="stat-label">perfiles en BD</p>
             </div>
           </div>
 
           <div class="stat-card total">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon">
+              <i class="fa-solid fa-bell-concierge"></i>
+            </div>
             <div class="stat-content">
-              <h2>Total Usuarios</h2>
-              <p class="stat-number" id="total-count">-</p>
-              <p class="stat-label">desde el inicio del programa</p>
+              <h2>Visitas a Restaurantes</h2>
+              <p class="stat-number" id="visitas-count">-</p>
+              <p class="stat-label">usos de membresía</p>
+            </div>
+          </div>
+
+          <div class="stat-card total">
+            <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+            <div class="stat-content">
+              <h2>Puntos Gourmet</h2>
+              <p class="stat-number" id="points-count">-</p>
+              <p class="stat-label">puntos acumulados</p>
             </div>
           </div>
         </div>
 
+        <!-- 2. GRÁFICAS DE MARKETING -->
         <div class="chart-container">
-          <h3>📅 Registros de los últimos 7 días</h3>
+          <h3>
+            <i class="fa-solid fa-envelope-open-text"></i> Top Dominios de
+            Correo
+          </h3>
           <p class="chart-description">
-            Cada barra muestra cuántos usuarios nuevos se registraron ese día
+            Principales proveedores de email para envíos de promociones
           </p>
-          <div class="loading" id="loading">Cargando datos...</div>
-          <div class="chart" id="weekly-chart" style="display: none"></div>
-          <div class="chart-legend">
-            <small
-              >💡 Pasa el cursor sobre las barras para ver los detalles de cada
-              día</small
-            >
-          </div>
+          <div class="loading" id="loading-email">Cargando datos...</div>
+          <div class="chart" id="email-chart" style="display: none"></div>
         </div>
 
         <div class="chart-container">
-          <h3>🏨 Top 10 Hoteles Más Populares</h3>
+          <h3><i class="fa-solid fa-gift"></i> Cumpleaños por Mes</h3>
           <p class="chart-description">
-            Hoteles con mayor cantidad de usuarios registrados
+            Distribución para cortesías de cumpleaños en restaurantes
           </p>
-          <div class="loading" id="loading-hotels">
-            Cargando datos de hoteles...
-          </div>
+          <div class="loading" id="loading-birthdays">Cargando datos...</div>
+          <div class="chart" id="birthdays-chart" style="display: none"></div>
+        </div>
+
+        <div class="chart-container">
+          <h3>
+            <i class="fa-solid fa-map-location-dot"></i> Top 10 Direcciones
+          </h3>
+          <p class="chart-description">
+            Zonas con mayor concentración de tarjetahabientes
+          </p>
+          <div class="loading" id="loading-address">Cargando datos...</div>
           <div
             class="chart hotels-chart"
-            id="hotels-chart"
+            id="address-chart"
             style="display: none"
           ></div>
-          <div class="chart-legend">
-            <small
-              >🏨 Los hoteles con más usuarios registrados en el programa de
-              lealtad</small
-            >
+        </div>
+
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-cake-candles"></i> Promedio de Edades</h3>
+          <p class="chart-description">
+            Edad promedio del comensal por género y total
+          </p>
+          <div class="loading" id="loading-age">Cargando datos...</div>
+          <div class="chart" id="age-chart" style="display: none"></div>
+        </div>
+
+        <!-- 3. TABLA DE LEALTAD -->
+        <div class="chart-container">
+          <h3><i class="fa-solid fa-crown"></i>Comensales Frecuentes</h3>
+          <p class="chart-description">
+            Usuarios con mayor uso de la Gourmet Card
+          </p>
+          <div class="loading" id="loading-clientes">Cargando lealtad...</div>
+          <div
+            class="table-responsive"
+            id="clientes-table-container"
+            style="display: none"
+          >
+            <table class="glass-table" id="clientes-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Uso de Tarjeta (Visitas)</th>
+                  <th>Puntos Acumulados</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Los datos se inyectarán aquí -->
+              </tbody>
+            </table>
           </div>
         </div>
 
         <div class="status-indicator">
           <span class="status-dot" id="connection-status"></span>
-          <span id="status-text">Conectando...</span>
+          <span id="status-text">Conectando a Firestore...</span>
         </div>
       </main>
 
       <footer>
         <p>Última actualización: <span id="last-update"></span></p>
-        <button onclick="refreshData()" class="refresh-btn">
-          🔄 Actualizar
-        </button>
+        <div style="display: flex; gap: 10px">
+          <button onclick="refreshData()" class="refresh-btn">
+            <i class="fa-solid fa-rotate-right"></i> Actualizar
+          </button>
+          <button onclick="window.print()" class="export-btn" id="pdf-btn">
+            <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+          </button>
+        </div>
       </footer>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Firebase -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>

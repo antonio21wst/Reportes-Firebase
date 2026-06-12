@@ -304,3 +304,11 @@ h3 i {
 .export-btn i {
   margin-right: 5px;
 }
+
+/* =========================================
+   NUEVA GRÁFICA DE REFERIDOS (Azul/Cyan)
+   ========================================= */
+#refer-chart .chart-bar .bar {
+  background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}

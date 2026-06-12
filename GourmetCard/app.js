@@ -1,255 +1,370 @@
-// Clave para guardar en el almacenamiento local (específica para Gourmet Card)
-const CACHE_KEY = "gourmetCard_dashboardData";
+import { db } from "./firebase-config.js";
+import {
+  collection,
+  getDocs,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Función para actualizar la interfaz con los datos
-function updateUI(data) {
-  if (!data) return;
+let addressData = {};
+let ageData = {};
+let emailData = {};
+let birthdayMonthData = {};
+let topClientesData = [];
 
-  // Mostrar datos en los contadores principales
-  document.getElementById("today-count").textContent =
-    data.todayCount !== undefined ? data.todayCount : "-";
-  document.getElementById("yesterday-count").textContent =
-    data.yesterdayCount !== undefined ? data.yesterdayCount : "-";
-  document.getElementById("total-count").textContent =
-    data.totalCount !== undefined ? data.totalCount : "-";
+const CACHE_KEY = "gourmet_dashboardData";
 
-  // Configurar fechas de las tarjetas (hoy y ayer)
+function calculateAge(birthDate) {
   const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const todayDateElement = document.getElementById("today-date");
-  const yesterdayDateElement = document.getElementById("yesterday-date");
-
-  if (todayDateElement)
-    todayDateElement.textContent = today.toLocaleDateString("es-ES", options);
-  if (yesterdayDateElement)
-    yesterdayDateElement.textContent = yesterday.toLocaleDateString(
-      "es-ES",
-      options,
-    );
-
-  // Actualizar gráficos
-  if (data.weeklyData) {
-    updateWeeklyChart(data.weeklyData);
-  }
-  if (data.topHotels) {
-    updateHotelsChart(data.topHotels);
-  }
-
-  // Actualizar fecha de la última consulta
-  if (data.lastUpdateTimestamp) {
-    const lastUpdateDate = new Date(data.lastUpdateTimestamp);
-    const lastUpdateElement = document.getElementById("last-update");
-    if (lastUpdateElement) {
-      lastUpdateElement.textContent = lastUpdateDate.toLocaleString("es-MX");
-    }
-  }
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  )
+    age--;
+  return age >= 0 ? age : null;
 }
 
-// Función para obtener datos del servidor backend (SOLO se ejecuta al dar click en "Actualizar")
-async function fetchDataFromServer() {
+function updateUI(data) {
+  document.getElementById("male-count").textContent = data.maleCount;
+  document.getElementById("male-percentage").textContent =
+    `(${data.malePercentage}%)`;
+  document.getElementById("female-count").textContent = data.femaleCount;
+  document.getElementById("female-percentage").textContent =
+    `(${data.femalePercentage}%)`;
+  document.getElementById("other-count").textContent = data.otherCount || 0;
+  document.getElementById("other-percentage").textContent =
+    `(${data.otherPercentage || 0}%)`;
+
+  document.getElementById("total-users").textContent = data.totalUsers;
+  document.getElementById("visitas-count").textContent = data.totalVisitas || 0;
+  document.getElementById("points-count").textContent = data.totalPoints || 0;
+
+  addressData = data.addressData || {};
+  ageData = data.ageData || {};
+  emailData = data.emailData || {};
+  birthdayMonthData = data.birthdayMonthData || {};
+  topClientesData = data.topClientesData || [];
+
+  renderCharts();
+
+  const lastUpdateDate = new Date(data.lastUpdateTimestamp);
+  document.getElementById("last-update").textContent =
+    lastUpdateDate.toLocaleString("es-MX");
+}
+
+async function fetchUserDataFromFirestore() {
   try {
     updateStatus("Conectando y descargando datos...", "connected");
+    const querySnapshot = await getDocs(collection(db, "user_profile"));
 
-    // 1. Obtener estadísticas generales y semanales
-    const statsResponse = await fetch("/api/stats");
-    if (!statsResponse.ok)
-      throw new Error("Error al obtener estadísticas del servidor");
-    const statsData = await statsResponse.json();
+    let maleCount = 0,
+      femaleCount = 0,
+      otherCount = 0,
+      totalVisitas = 0,
+      totalPoints = 0;
+    let maleAges = [],
+      femaleAges = [],
+      otherAges = [];
+    let tempAddressData = {},
+      tempEmailData = {},
+      tempBirthdayMonthData = {};
+    let tempClientesData = [];
+    const monthNames = [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ];
 
-    // 2. Obtener Top 10 Hoteles
-    const hotelsResponse = await fetch("/api/top-hotels");
-    let topHotelsData = { topHotels: [] };
-    if (hotelsResponse.ok) {
-      topHotelsData = await hotelsResponse.json();
-    }
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
 
-    // 3. Consolidar los datos en un solo objeto
+      // Género
+      if (data.gender) {
+        const gender = data.gender.toLowerCase().trim();
+        if (["hombre", "h", "male", "m", "masculino"].includes(gender))
+          maleCount++;
+        else if (["mujer", "f", "female", "femenino"].includes(gender))
+          femaleCount++;
+        else otherCount++;
+      }
+
+      // Direcciones
+      if (data.address)
+        tempAddressData[data.address] =
+          (tempAddressData[data.address] || 0) + 1;
+
+      // Correos
+      if (data.email) {
+        const parts = data.email.split("@");
+        if (parts.length === 2) {
+          const domain = parts[1].toLowerCase().trim();
+          tempEmailData[domain] = (tempEmailData[domain] || 0) + 1;
+        }
+      }
+
+      // Cumpleaños y Edades
+      if (data.birthday) {
+        try {
+          let birthDate = data.birthday.toDate
+            ? data.birthday.toDate()
+            : new Date(data.birthday);
+          const month = monthNames[birthDate.getMonth()];
+          if (month)
+            tempBirthdayMonthData[month] =
+              (tempBirthdayMonthData[month] || 0) + 1;
+          const age = calculateAge(birthDate);
+          if (age !== null) {
+            const gLower = data.gender ? data.gender.toLowerCase().trim() : "";
+            if (["hombre", "h", "male", "m", "masculino"].includes(gLower))
+              maleAges.push(age);
+            else if (["mujer", "f", "female", "femenino"].includes(gLower))
+              femaleAges.push(age);
+            else otherAges.push(age);
+          }
+        } catch (e) {}
+      }
+
+      // Lealtad
+      let userVisitas = Number(data.visitas) || 0;
+      let userPoints = Number(data.points) || 0;
+      totalVisitas += userVisitas;
+      totalPoints += userPoints;
+
+      let userName =
+        data.name || data.email || "Usuario " + doc.id.substring(0, 5);
+      if (userVisitas > 0 || userPoints > 0) {
+        tempClientesData.push({
+          name: userName,
+          visitas: userVisitas,
+          points: userPoints,
+        });
+      }
+    });
+
+    // Ordenar Top 15
+    tempClientesData.sort((a, b) => b.visitas - a.visitas);
+    const finalTopClientes = tempClientesData.slice(0, 15);
+
+    // Promedios de Edad
+    const totalUsers = maleCount + femaleCount + otherCount;
+    const maleAgeAvg =
+      maleAges.length > 0
+        ? (maleAges.reduce((a, b) => a + b, 0) / maleAges.length).toFixed(1)
+        : 0;
+    const femaleAgeAvg =
+      femaleAges.length > 0
+        ? (femaleAges.reduce((a, b) => a + b, 0) / femaleAges.length).toFixed(1)
+        : 0;
+    const otherAgeAvg =
+      otherAges.length > 0
+        ? (otherAges.reduce((a, b) => a + b, 0) / otherAges.length).toFixed(1)
+        : 0;
+    const allAges = maleAges.concat(femaleAges).concat(otherAges);
+    const totalAgeAvg =
+      allAges.length > 0
+        ? (allAges.reduce((a, b) => a + b, 0) / allAges.length).toFixed(1)
+        : 0;
+
+    let tempAgeData = {
+      Hombres: parseFloat(maleAgeAvg),
+      Mujeres: parseFloat(femaleAgeAvg),
+    };
+    if (parseFloat(otherAgeAvg) > 0)
+      tempAgeData["Otros"] = parseFloat(otherAgeAvg);
+    tempAgeData["Total"] = parseFloat(totalAgeAvg);
+
     const finalData = {
-      ...statsData,
-      topHotels: topHotelsData.topHotels,
+      maleCount,
+      femaleCount,
+      otherCount,
+      totalUsers,
+      totalVisitas,
+      totalPoints,
+      malePercentage:
+        totalUsers > 0 ? ((maleCount / totalUsers) * 100).toFixed(1) : 0,
+      femalePercentage:
+        totalUsers > 0 ? ((femaleCount / totalUsers) * 100).toFixed(1) : 0,
+      otherPercentage:
+        totalUsers > 0 ? ((otherCount / totalUsers) * 100).toFixed(1) : 0,
+      addressData: tempAddressData,
+      ageData: tempAgeData,
+      emailData: tempEmailData,
+      birthdayMonthData: tempBirthdayMonthData,
+      topClientesData: finalTopClientes,
       lastUpdateTimestamp: new Date().toISOString(),
     };
 
-    // Guardar en caché (localStorage)
     localStorage.setItem(CACHE_KEY, JSON.stringify(finalData));
-
-    // Actualizar la interfaz
     updateUI(finalData);
-    updateStatus("Datos actualizados desde el servidor", "connected");
+    updateStatus("Datos actualizados desde Firestore", "connected");
   } catch (error) {
-    console.error("Error en conexión:", error);
-    updateStatus("Error al conectar: " + error.message, "error");
+    console.error("Error obteniendo datos:", error);
+    updateStatus("Error al conectar", "error");
   }
 }
 
-// Función para actualizar el gráfico semanal
-function updateWeeklyChart(weeklyData) {
-  const chartContainer = document.getElementById("weekly-chart");
-  const loadingDiv = document.getElementById("loading");
-
-  if (!chartContainer) return;
-
-  loadingDiv.style.display = "none";
-  chartContainer.style.display = "flex";
-  chartContainer.style.flexDirection = "column";
-
-  let chartHTML = "";
-  const maxCount = Math.max(...weeklyData.map((d) => d.count), 1);
-
-  weeklyData.forEach((dayData) => {
-    const width = (dayData.count / maxCount) * 100;
-    chartHTML += `
-            <div class="chart-bar" title="${dayData.dayFull || dayData.day} ${dayData.date}: ${dayData.count} registros">
-                <div class="bar-label">
-                    <strong>${dayData.day}</strong>
-                    <small>${dayData.date}</small>
-                </div>
-                <div class="bar" style="width: ${width}%"></div>
-                <div class="bar-count">${dayData.count}</div>
-            </div>
-        `;
-  });
-
-  chartContainer.innerHTML = chartHTML;
+function renderCharts() {
+  renderEmailChart();
+  renderBirthdayChart();
+  renderAddressChart();
+  renderAgeChart();
+  renderClientesTable();
 }
 
-// Función para actualizar el gráfico de hoteles
-function updateHotelsChart(topHotels) {
-  const chartContainer = document.getElementById("hotels-chart");
-  const loadingDiv = document.getElementById("loading-hotels");
-
-  if (!chartContainer) return;
-
-  loadingDiv.style.display = "none";
-  chartContainer.style.display = "flex";
-  chartContainer.style.flexDirection = "column";
-
-  if (!topHotels || topHotels.length === 0) {
-    chartContainer.innerHTML =
-      '<p style="text-align: center; color: #666; padding: 40px;">No hay datos de hoteles disponibles</p>';
+function renderEmailChart() {
+  const chart = document.getElementById("email-chart");
+  const loading = document.getElementById("loading-email");
+  if (Object.keys(emailData).length === 0) {
+    loading.textContent = "No hay datos de correo";
     return;
   }
-
-  let chartHTML = "";
-  const maxCount = Math.max(...topHotels.map((h) => h.count), 1);
-
-  topHotels.forEach((hotel) => {
-    const width = Math.max((hotel.count / maxCount) * 100, 5); // Mínimo 5% visual
-    chartHTML += `
-            <div class="chart-bar" title="Hotel ${hotel.hotelId}: ${hotel.count} usuarios registrados">
-                <div class="bar-label">${hotel.hotelId}</div>
-                <div class="bar" style="width: ${width}%"></div>
-                <div class="bar-count">${hotel.count}</div>
-            </div>
-        `;
+  const sorted = Object.entries(emailData)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+  sorted.forEach(([domain, count]) => {
+    const width = (count / maxCount) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${domain}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
   });
-
-  chartContainer.innerHTML = chartHTML;
+  loading.style.display = "none";
+  chart.style.display = "flex";
 }
 
-// Función para buscar por hotel (Se mantiene independiente porque es on-demand)
-async function searchHotel() {
-  const hotelId = document.getElementById("hotel-search-input").value.trim();
-  if (!hotelId) {
-    alert("Por favor ingresa un ID de hotel");
+function renderBirthdayChart() {
+  const chart = document.getElementById("birthdays-chart");
+  const loading = document.getElementById("loading-birthdays");
+  if (Object.keys(birthdayMonthData).length === 0) {
+    loading.textContent = "No hay datos de fechas";
     return;
   }
-
-  const resultElement = document.getElementById("hotel-result");
-  const searchBtn = document.getElementById("hotel-search-btn");
-
-  // Estado de carga
-  searchBtn.textContent = "⏳";
-  searchBtn.disabled = true;
-  resultElement.textContent = "...";
-
-  try {
-    const response = await fetch(
-      `/api/hotel-users/${encodeURIComponent(hotelId)}`,
-    );
-    if (response.ok) {
-      const data = await response.json();
-      resultElement.textContent = data.userCount;
-      document.getElementById("hotel-label").textContent =
-        `usuarios del hotel "${hotelId}"`;
-    } else {
-      resultElement.textContent = "0";
-    }
-  } catch (error) {
-    console.error("Error buscando hotel:", error);
-    resultElement.textContent = "Error";
-  } finally {
-    searchBtn.textContent = "🔍";
-    searchBtn.disabled = false;
-  }
+  const sorted = Object.entries(birthdayMonthData)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+  sorted.forEach(([month, count]) => {
+    const width = (count / maxCount) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${month}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
+  });
+  loading.style.display = "none";
+  chart.style.display = "flex";
 }
 
-// Actualizar estado de conexión
+function renderAddressChart() {
+  const chart = document.getElementById("address-chart");
+  const loading = document.getElementById("loading-address");
+  if (Object.keys(addressData).length === 0) {
+    loading.textContent = "No hay datos disponibles";
+    return;
+  }
+  const sorted = Object.entries(addressData)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+  chart.innerHTML = "";
+  const maxCount = Math.max(...sorted.map((item) => item[1]));
+  sorted.forEach(([address, count]) => {
+    const width = (count / maxCount) * 100;
+    const shortAddress =
+      address.length > 30 ? address.substring(0, 30) + "..." : address;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${shortAddress}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${count}</div>`;
+    chart.appendChild(bar);
+  });
+  loading.style.display = "none";
+  chart.style.display = "flex";
+}
+
+function renderAgeChart() {
+  const chart = document.getElementById("age-chart");
+  const loading = document.getElementById("loading-age");
+  if (Object.keys(ageData).length === 0) {
+    loading.textContent = "No hay datos disponibles";
+    return;
+  }
+  chart.innerHTML = "";
+  const maxAge = Math.max(...Object.values(ageData));
+  Object.entries(ageData).forEach(([gender, age]) => {
+    const width = (age / maxAge) * 100;
+    const bar = document.createElement("div");
+    bar.className = "chart-bar";
+    bar.innerHTML = `<div class="bar-label"><strong>${gender}</strong></div><div class="bar" style="width: ${width}%;"></div><div class="bar-count">${age} años</div>`;
+    chart.appendChild(bar);
+  });
+  loading.style.display = "none";
+  chart.style.display = "flex";
+}
+
+function renderClientesTable() {
+  const container = document.getElementById("clientes-table-container");
+  const tbody = document.querySelector("#clientes-table tbody");
+  const loading = document.getElementById("loading-clientes");
+  if (!topClientesData || topClientesData.length === 0) {
+    loading.textContent = "No hay clientes con visitas registradas.";
+    return;
+  }
+  tbody.innerHTML = "";
+  const maxVisitas =
+    topClientesData[0].visitas > 0 ? topClientesData[0].visitas : 1;
+  topClientesData.forEach((user, index) => {
+    let porcentajeAvance = (user.visitas / maxVisitas) * 100;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+          <td><strong>#${index + 1}</strong> ${user.name}</td>
+          <td>
+              <div class="progress-wrapper">
+                  <span class="pct-text">${user.visitas}</span>
+                  <div class="progress-bar-bg">
+                      <div class="progress-bar-fill" style="width: ${porcentajeAvance}%;"></div>
+                  </div>
+              </div>
+          </td>
+          <td><span class="badge-stamps">${user.points} pts</span></td>
+      `;
+    tbody.appendChild(tr);
+  });
+  loading.style.display = "none";
+  container.style.display = "block";
+}
+
 function updateStatus(text, status) {
-  const statusText = document.getElementById("status-text");
-  const statusDot = document.getElementById("connection-status");
-  if (statusText) statusText.textContent = text;
-  if (statusDot) {
-    statusDot.className = "status-dot";
-    if (status) statusDot.classList.add(status);
-  }
+  document.getElementById("status-text").textContent = text;
+  document.getElementById("connection-status").className =
+    "status-dot " + status;
 }
 
-// Actualizar datos manualmente al dar click al botón
 function refreshData() {
-  fetchDataFromServer();
+  updateStatus("Actualizando...", "connected");
+  fetchUserDataFromFirestore();
 }
 
-// Cargar datos al iniciar
-document.addEventListener("DOMContentLoaded", () => {
-  // Intentar leer los datos guardados en la sesión anterior
+window.addEventListener("DOMContentLoaded", () => {
   const cachedDataString = localStorage.getItem(CACHE_KEY);
-
   if (cachedDataString) {
-    // Si hay datos guardados, los mostramos sin consultar al backend
     try {
-      const cachedData = JSON.parse(cachedDataString);
-      updateUI(cachedData);
-      updateStatus(
-        "Datos cargados de la última sesión (Caché local)",
-        "connected",
-      );
+      updateUI(JSON.parse(cachedDataString));
+      updateStatus("Datos cargados de caché local", "connected");
     } catch (e) {
-      console.error("Error leyendo la caché:", e);
       updateStatus("Error en caché. Presiona Actualizar.", "error");
     }
   } else {
-    // Si es la primera vez que entra y no hay caché
-    updateStatus(
-      "Presiona 'Actualizar' para descargar los reportes",
-      "connected",
-    );
-    document.getElementById("loading").textContent =
-      "Esperando actualización manual...";
-    document.getElementById("loading-hotels").textContent =
-      "Esperando actualización manual...";
-    document.getElementById("last-update").textContent = "Nunca";
-  }
-
-  // Agregar listener para Enter en búsqueda de hotel
-  const searchInput = document.getElementById("hotel-search-input");
-  if (searchInput) {
-    searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        searchHotel();
-      }
-    });
+    updateStatus("Presiona 'Actualizar' para descargar", "connected");
   }
 });
-
-// Exponer funciones globales
 window.refreshData = refreshData;
-window.searchHotel = searchHotel;
